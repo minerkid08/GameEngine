@@ -2,7 +2,7 @@
 class ExLayer : public Engine::Layer{
 	public:
 	ExLayer() : Layer("layerNaem"){
-		mesh = Engine::Mesh::Plane(Engine::Material::MakeSolidColor({0.7, 0.3, 0.4}));
+		mesh = Engine::Mesh::Plane(Engine::Material::MakeSolidColor(color));
 		mesh2 = Engine::Mesh::Plane(Engine::Material::MakeTexture("Game/textures/tex3.png"));
 	}
 
@@ -11,12 +11,14 @@ class ExLayer : public Engine::Layer{
 		ImGui::SliderFloat("X", &x, -5.0f, 5.0f);
 		ImGui::SliderFloat("Y", &y, -5.0f, 5.0f);
 		ImGui::SliderFloat("Rot", &r, 0.0f, 360.0f);
+		ImGui::ColorPicker3("Color", glm::value_ptr(color));
 		ImGui::End();
 	}
 
 	void update(float deltaTime){
 		Engine::App::getInstance().cam.setPos(glm::vec3(x,y,0.0f));
 		Engine::App::getInstance().cam.setRot(r);
+		mesh->getMaterial()->setColor(color);
 		Engine::Renderer::submit(mesh, 0);
 		Engine::Renderer::submit(mesh2, 1);
 	}
@@ -28,6 +30,7 @@ class ExLayer : public Engine::Layer{
 	float x = 0;
 	float y = 0;
 	float r = 0;
+	glm::vec3 color = {0.7, 0.3, 0.4};
 };
 class Sandbox : public Engine::App{
 	public:

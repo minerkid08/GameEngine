@@ -10,4 +10,6 @@
 #include "Mesh.h"
 #include "renderer/Renderer.h"
 #include "renderer/Texture.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "Main.h"
