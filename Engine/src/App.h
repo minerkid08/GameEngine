@@ -23,7 +23,7 @@ namespace Engine{
 		inline Window& getWindow(){return *window;}
 		static inline App& getInstance(){return *instance;}
 
-		OrthoCamera cam;
+		Camera cam;
 		private:
 		static App* instance;
 		bool windowClose(WindowCloseEvent& e);

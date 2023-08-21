@@ -39,7 +39,7 @@ namespace Engine{
 		shdPtr<VertArray> getVertArray(){return vertArray;}
 		glm::mat4x4 getTransform(){return transform;}
 		
-		void setPos(glm::vec2 _pos){
+		void setPos(glm::vec3 _pos){
 			pos = _pos;
 			recalcTransform();
 		}
@@ -47,7 +47,7 @@ namespace Engine{
 			rot = _rot;
 			recalcTransform();
 		}
-		void setScale(glm::vec2 _scale){
+		void setScale(glm::vec3 _scale){
 			scale = _scale;
 			recalcTransform();
 		}
@@ -57,13 +57,13 @@ namespace Engine{
 		shdPtr<Material> material;
 
 		glm::mat4x4 transform;
-		glm::vec2 pos = {0,0};
+		glm::vec3 pos = {0,0,0};
 		float rot = 0.0f;
-		glm::vec2 scale = {1,1};
+		glm::vec3 scale = {1,1,1};
 
 		void recalcTransform(){
-			transform = glm::scale(glm::mat4x4(1.0f), glm::vec3(scale, 0.0f));
-			transform = glm::translate(transform, glm::vec3(pos, 0.0f));
+			transform = glm::scale(glm::mat4x4(1.0f), scale);
+			transform = glm::translate(transform, pos);
 			transform = glm::rotate(transform, rot, glm::vec3(0.0f, 0.0f, 1.0f));
 		}
 	};

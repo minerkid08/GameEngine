@@ -13,7 +13,7 @@ namespace Engine{
 		static void clear();
 		static void setClearColor(const glm::vec4& color);
 
-		static void beginScene(OrthoCamera& cam);
+		static void beginScene(Camera& cam);
 		static void endScene();
 		static void submit(const shdPtr<VertArray>& vertexArray, const shdPtr<Shader>& shader, const glm::mat4x4& transform);
 		static void submit(const shdPtr<Mesh>& mesh, int texSlot);

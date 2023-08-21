@@ -12,7 +12,7 @@ namespace Engine{
 	void Renderer::setClearColor(const glm::vec4& color){
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
-	void Renderer::beginScene(OrthoCamera& cam){
+	void Renderer::beginScene(Camera& cam){
 		sceneData->viewProjMat = cam.getViewProjMat();
 	}
 	void Renderer::endScene(){

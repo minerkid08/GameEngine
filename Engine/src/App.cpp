@@ -3,7 +3,7 @@
 #include "renderer/Renderer.h"
 namespace Engine{
 	App* App::instance = nullptr;
-	App::App() : cam(-1.6f, 1.6f, 0.9f, -0.9f){
+	App::App() : cam(){
 		if(instance){
 			Log::Error("App already exists");
 			return;
