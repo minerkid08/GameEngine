@@ -25,8 +25,8 @@ namespace Engine{
 		layerStack.pushOverlay(overlay);
 	}
 	void App::run(){
+		Renderer::setClearColor({0.25f, 0.25f, 0.25f, 1.0f});
 		while(running){
-			Renderer::setClearColor({0.25f, 0.25f, 0.25f, 1.0f});
 			Renderer::clear();
 			
 			float currentTime = (float)glfwGetTime();
