@@ -1,6 +1,6 @@
 #pragma once
-#include "../Log.h"
-#include "../Core.h"
+#include "Core/Log.h"
+#include "Core/Core.h"
 #include <vector>
 #include <string>
 #include <initializer_list>

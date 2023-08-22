@@ -3,8 +3,9 @@
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <map>
+#include <unordered_map>
 #include <glm/glm.hpp>
-#include "../Core.h"
+#include "Core/Core.h"
 
 namespace Engine{
 	class API Shader{
@@ -13,6 +14,8 @@ namespace Engine{
 		~Shader();
 		void run();
 		void unbind();
+
+		std::string getName();
 
 		void loadUniform(const std::string& name);
 
@@ -29,5 +32,16 @@ namespace Engine{
 		private:
 		unsigned int prgmid;
 		std::map<std::string, int> uniforms;
+		std::string name;
+	};
+
+	class ShaderLib{
+		public:
+		void add(const shdPtr<Shader>& shader);
+		shdPtr<Shader> load(const std::string& filename);
+		
+		shdPtr<Shader> get(const std::string& name);
+		private:
+		std::unordered_map<std::string, shdPtr<Shader>> shaders;
 	};
 }

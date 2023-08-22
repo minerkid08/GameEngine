@@ -3,9 +3,9 @@
 #include <fstream>
 #include <unordered_map>
 #include <sstream>
-#include <vector>
+#include <array>
 #include <glm/gtc/type_ptr.hpp>
-#include "../Log.h"
+#include "Core/Log.h"
 namespace Engine{
 	static int typeFromString(const std::string& type){
 		if(type == "frag"){return GL_FRAGMENT_SHADER;}
@@ -19,7 +19,7 @@ namespace Engine{
 	}
 	Shader::Shader(const std::string& filename){
 		std::string data;
-		std::ifstream file(filename, std::ios::binary);
+		std::ifstream file(filename, std::ios::in | std::ios::binary);
 		if(file){
 			file.seekg(0, std::ios::end);
 			data.resize(file.tellg());
@@ -49,7 +49,8 @@ namespace Engine{
 			pos = data.find(typeToken, nextPos);
 			map[typeFromString(type)] = data.substr(nextPos, pos - (nextPos == std::string::npos ? data.size() - 1 : nextPos));
 		}
-		std::vector<unsigned int> ids;
+		std::array<unsigned int, 2> ids;
+		int i = 0;
 		for(auto& kv : map){
 			int type = kv.first;
 			std::string srcs = kv.second;
@@ -69,7 +70,8 @@ namespace Engine{
 				Log::Error(stringFromType(type) + " shader compilation failed: " + str);
 				return;
 			}
-			ids.push_back(id);
+			ids[i] = id;
+			i++;
 		}
 		prgmid = glCreateProgram();
 		for(auto& id : ids){
@@ -95,9 +97,18 @@ namespace Engine{
 		for(auto& id : ids){
 			glDeleteShader(id);
 		}
+
+		int slash = filename.find_last_of("/\\");
+		slash = (slash == std::string::npos ? 0 : slash + 1);
+		int dot = filename.rfind(".");
+		int count = (dot == std::string::npos ? filename.size() - slash : dot - 1);
+		name = filename.substr(slash, count);
 	}
 	Shader::~Shader(){
 		glDeleteProgram(prgmid);
+	}
+	std::string Shader::getName(){
+		return name;
 	}
 	void Shader::loadUniform(const std::string& name){
 		int id = glGetUniformLocation(prgmid, name.c_str());
@@ -136,5 +147,24 @@ namespace Engine{
 	}
 	void Shader::setValue(const std::string& name, const glm::mat4x4& value){
 		glUniformMatrix4fv(uniforms[name], 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+	void ShaderLib::add(const shdPtr<Shader>& shader){
+		std::string name = shader->getName();
+		if(shaders.find(name) == shaders.end()){
+			Log::Error("Shader already in libary");
+		}
+		shaders[shader->getName()] = shader;
+	}
+	shdPtr<Shader> ShaderLib::load(const std::string& filename){
+		shdPtr<Shader> shader = std::make_shared<Shader>(filename);
+		add(shader);
+		return shader;
+	}
+	shdPtr<Shader> ShaderLib::get(const std::string& name){
+		if(shaders.find(name) == shaders.end()){
+			Log::Error("Shader already in libary");
+		}
+		return shaders[name];
 	}
 }
