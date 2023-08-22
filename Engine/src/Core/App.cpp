@@ -1,6 +1,7 @@
 #include "App.h"
 #include "Log.h"
 #include "renderer/Renderer.h"
+#include "renderer/2D/2DRenderer.h"
 namespace Engine{
 	App* App::instance = nullptr;
 	App::App(){
@@ -11,6 +12,7 @@ namespace Engine{
 		window = uniqPtr<Window>(Window::MakeWindow(1280,720,"window.png"));
 		window->setEventCallback(std::bind(App::event, this, std::placeholders::_1));
 		Renderer::init();
+		Renderer2D::init();
 		instance = this;
 		uiLayer = new ImGuiLayer();
 		pushOverlay(uiLayer);

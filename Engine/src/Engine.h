@@ -11,6 +11,6 @@
 #include "renderer/CameraController.h"
 #include "renderer/Renderer.h"
 #include "renderer/Texture.h"
+#include "renderer/2D/2DRenderer.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "Core/Main.h"

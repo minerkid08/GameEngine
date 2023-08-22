@@ -1,4 +1,5 @@
-#include <Engine.h>
+#include "2dLayer.h"
+#include <Core/Main.h>
 class ExLayer : public Engine::Layer{
 	public:
 	ExLayer() : Layer("layerNaem"), camera(1280.0f/720.0f){
@@ -35,7 +36,7 @@ class ExLayer : public Engine::Layer{
 class Sandbox : public Engine::App{
 	public:
 	Sandbox() : App(){
-		pushLayer(new ExLayer());
+		pushLayer(new Layer2D());
 	}
 	~Sandbox(){
 
