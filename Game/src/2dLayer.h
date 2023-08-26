@@ -12,4 +12,6 @@ class Layer2D : public Engine::Layer{
 	private:
 	Engine::CameraController cameraController;
 	glm::vec3 color;
+	Engine::shdPtr<Engine::Texture2D> tex;
+	Engine::shdPtr<Engine::Texture2D> tex2;
 };

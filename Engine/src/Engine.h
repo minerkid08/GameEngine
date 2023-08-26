@@ -8,6 +8,8 @@
 #include "Core/KeyCodes.h"
 #include "Core/ImGuiLayer.h"
 #include "Core/Mesh.h"
+#include "Core/Time.h"
+#include "Debug/ProfilingLayer.h"
 #include "renderer/CameraController.h"
 #include "renderer/Renderer.h"
 #include "renderer/Texture.h"

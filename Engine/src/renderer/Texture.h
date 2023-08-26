@@ -11,6 +11,8 @@ namespace Engine{
 	class API Texture2D : public Texture{
 		public:
 		Texture2D(const std::string& filename);
+		Texture2D(int width, int height);
+		void setData(void* data, int size);
 		~Texture2D();
 		int getWidth(){return width;}
 		int getHeight(){return height;}
@@ -20,5 +22,7 @@ namespace Engine{
 		unsigned int width = 0;
 		unsigned int height = 0;
 		std::string path;
+		int intFormat;
+		int format;
 	};
 }

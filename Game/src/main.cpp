@@ -37,6 +37,7 @@ class Sandbox : public Engine::App{
 	public:
 	Sandbox() : App(){
 		pushLayer(new Layer2D());
+		pushOverlay(new Engine::ProfilingLayer());
 	}
 	~Sandbox(){
 
