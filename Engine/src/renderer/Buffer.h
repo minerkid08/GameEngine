@@ -107,10 +107,11 @@ namespace Engine{
 	class API VertBuffer{
 		public:
 		VertBuffer(float* verts, unsigned int size);
+		VertBuffer(unsigned int size);
 		~VertBuffer();
 		void bind();
 		void unbind();
-		void setData();
+		void setData(const void* data, unsigned int size);
 		void setLayout(BufferLayout _layout);
 		BufferLayout getLayout(){return layout;}
 		private:

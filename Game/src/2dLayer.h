@@ -11,7 +11,8 @@ class Layer2D : public Engine::Layer{
 	void event(Engine::Event& e);
 	private:
 	Engine::CameraController cameraController;
-	glm::vec3 color;
+	glm::vec4 color = {0.5f, 0.5f, 0.5f, 1.0f};
+	Engine::Transform transform;
 	Engine::shdPtr<Engine::Texture2D> tex;
 	Engine::shdPtr<Engine::Texture2D> tex2;
 };

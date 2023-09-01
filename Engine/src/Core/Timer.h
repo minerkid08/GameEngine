@@ -12,7 +12,7 @@ namespace Engine{
 		float getTime(){
 			auto endTime = std::chrono::high_resolution_clock::now();
 			std::chrono::duration<float> t = endTime - startTime;
-			return t.count() * 0.001f;
+			return t.count();
 		}
 		private:
 		std::chrono::time_point<std::chrono::high_resolution_clock> startTime;

@@ -2,10 +2,11 @@
 #include <list>
 namespace Engine{
 	ProfilingLayer::ProfilingLayer() : Layer("ProfilingLayer"){
-		
 	}
 	void ProfilingLayer::imGuiRender(){
-		times.insert(times.begin(), 1, timer.getTime());
+
+		float current = timer.getTime();
+		times.insert(times.begin(), 1, current);
 		if(times.size() > 100){
 			times.pop_back();
 		}
@@ -26,7 +27,7 @@ namespace Engine{
 		}
 		ImGui::Begin("Time");
 		ImGui::PlotLines("Update Loop", a, times.size());
-		//ImGui::Text("Min: %d, Max: %d", min, max);
+		ImGui::Text(("Min: " + std::to_string(min) + ", Max: " + std::to_string(max) + ", Current: " + std::to_string(current)).c_str());
 		ImGui::End();
 	}
 }

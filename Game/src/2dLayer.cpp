@@ -12,12 +12,16 @@ void Layer2D::update(float deltaTime){
 }
 void Layer2D::imGuiRender(){
 	ImGui::Begin("E");
-	ImGui::ColorPicker3("color", glm::value_ptr(color));
+	ImGui::ColorPicker3("color", glm::value_ptr(color), ImGuiColorEditFlags_PickerHueWheel);
 	ImGui::End();
 	Engine::Renderer2D::beginScene(cameraController.getCamera());
 	//Engine::Renderer2D::draw({0.0f,0.0f},{1.0f,1.0f},glm::vec4(color, 1.0f));
-	Engine::Renderer2D::draw({0.0f,0.0f,-0.1},{2.0f,2.0f},glm::vec4(color, 1.0f));
-	Engine::Renderer2D::draw({0.0f,0.0f,-0.2},{4.0f,4.0f},tex,glm::vec4(0.5f, 0.2f, 0.3f, 1.0f));
+	transform.pos = {0.0f, 0.0f,-0.1};
+	transform.scale = {2.0f,2.0f};
+	Engine::Renderer2D::draw(transform, color);
+	transform.pos = {0.0f,0.0f,-0.2};
+	transform.scale = {8.0f,8.0f};
+	Engine::Renderer2D::draw(transform, glm::vec4(0.5f, 0.2f, 0.3f, 1.0f));
 	Engine::Renderer2D::endScene();
 }
 void Layer2D::event(Engine::Event& e){
