@@ -1,15 +1,21 @@
 #include "Buffer.h"
 namespace Engine{
 	VertBuffer::VertBuffer(float* verts, unsigned int size){
-		glGenBuffers(1, &id);
+		glCreateBuffers(1, &id);
 		glBindBuffer(GL_ARRAY_BUFFER, id);
 		glBufferData(GL_ARRAY_BUFFER, size, verts, GL_STATIC_DRAW);
+	}
+	VertBuffer::VertBuffer(unsigned int size){
+		glGenBuffers(1, &id);
+		glBindBuffer(GL_ARRAY_BUFFER, id);
+		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 	}
 	VertBuffer::~VertBuffer(){
 		glDeleteBuffers(1, &id);
 	}
-	void VertBuffer::setData(){
-		
+	void VertBuffer::setData(const void* data, unsigned int size){
+		glBindBuffer(GL_ARRAY_BUFFER, id);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
 	void VertBuffer::bind(){
 		glBindBuffer(1, id);

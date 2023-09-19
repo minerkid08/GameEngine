@@ -25,7 +25,7 @@ namespace Engine{
 		float getRot(){return rot;}
 		glm::mat4x4 getProjMat(){return projMat;}
 		glm::mat4x4 getViewMat(){return viewMat;}
-		glm::mat4x4 getViewProjMat(){return viewProjMat;}
+		const glm::mat4x4 getViewProjMat() const {return viewProjMat;}
 		void setPos(const glm::vec3& newPos){pos = newPos; updateMat();}
 		void setRot(const float newRot){rot = newRot; updateMat();}
 

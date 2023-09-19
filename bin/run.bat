@@ -1,0 +1,2 @@
+call game.exe
+PAUSE

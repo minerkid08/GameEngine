@@ -1,13 +1,13 @@
 #pragma once
-#include "../Core.h"
-#include "../Log.h"
+#include "Core/Core.h"
+#include "Core/Log.h"
 #include <functional>
 #include <string>
 namespace Engine{
 	enum EventType{
 		None = 0,
 		WindowClosed, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
-		KeyPressed, KeyReleased, KeyTyped,
+		KeyPressed, KeyReleased,
 		MouseButtonPressed, MouseButtonRelased, MouseMoved, MouseScrolled
 	};
 	enum EventCategory{
@@ -18,7 +18,7 @@ namespace Engine{
 		CatMouseButton = 16
 	};
 	#define EventClassType(type) static int getStaticType() {return EventType::type;}\
-		virtual int getType() override {return getStaticType(); }\
+		virtual int getType() override {return EventType::type;}\
 		virtual const char* getName() override {return #type;}	
 
 	#define EventClassCategory(category) virtual int getFlags() override {return category;}
@@ -26,7 +26,6 @@ namespace Engine{
 		friend class EventDispatcher;
 		public:
 		Event(){}
-		static int getStaticType(){return 0;}
 		virtual int getType(){return 0;}
 		virtual const char* getName(){return "0";}
 		virtual int getFlags(){return 0;}
@@ -36,21 +35,21 @@ namespace Engine{
 			return getFlags() & _category;
 		}
 		private:
-		bool handled;
+		bool handled = false;
 	}; 
 	class EventDispatcher{
 		public:
-		template<typename T> using fn = std::function<bool(T&)>;
-		EventDispatcher(Event& _event) : event(_event){}
+		template<typename T> using fn = std::function<bool(T*)>;
+		EventDispatcher(Event* _event) : event(_event){}
 		template<typename T>
 		bool dispatch(fn<T> func){
-			if(event.getType() == T::getStaticType()){
-				event.handled |= func(*(T*)&event);
+			if(event->getType() == T::getStaticType()){
+				event->handled |= func((T*)event);
 				return true;
 			}
 			return false;
 		}
 		private:
-		Event& event;
+		Event* event;
 	};
 }

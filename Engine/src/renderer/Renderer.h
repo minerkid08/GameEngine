@@ -3,8 +3,8 @@
 #include <memory>
 #include "VertArray.h"
 #include "Shader.h"
-#include "Camera.h"
-#include "Mesh.h"
+#include "renderer/Camera.h"
+#include "Core/Mesh.h"
 namespace Engine{
 	class API Renderer{
 		public:

@@ -31,14 +31,4 @@ namespace Engine{
 			return ss.str();
 		}
 	};
-	class KeyTypedEvent : public KeyEvent{
-		public:
-		EventClassType(KeyTyped)
-		KeyTypedEvent(int code) : KeyEvent(code){}
-		std::string toString(){
-			std::stringstream ss;
-			ss << "KeyTypedEvent: " << keyCode;
-			return ss.str();
-		}
-	};
 }

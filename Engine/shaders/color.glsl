@@ -9,8 +9,8 @@ void main(){
 
 $frag
 #version 330 core
-uniform vec3 color;
+uniform vec4 color;
 out vec4 ocolor;
 void main(){
-	ocolor = vec4(color, 1.0);
+	ocolor = vec4(color);
 }
