@@ -127,6 +127,9 @@ namespace Engine{
 	void Shader::setValue(const std::string& name, int value){
 		glUniform1i(uniforms[name], value);
 	}
+	void Shader::setValue(const std::string& name, int* values, unsigned int count){
+		glUniform1iv(uniforms[name], count, values);
+	}
 	void Shader::setValue(const std::string& name, float value){
 		glUniform1f(uniforms[name], value);
 	}
@@ -148,7 +151,6 @@ namespace Engine{
 	void Shader::setValue(const std::string& name, const glm::mat4x4& value){
 		glUniformMatrix4fv(uniforms[name], 1, GL_FALSE, glm::value_ptr(value));
 	}
-
 	void ShaderLib::add(const shdPtr<Shader>& shader){
 		std::string name = shader->getName();
 		if(shaders.find(name) == shaders.end()){
@@ -163,7 +165,7 @@ namespace Engine{
 	}
 	shdPtr<Shader> ShaderLib::get(const std::string& name){
 		if(shaders.find(name) == shaders.end()){
-			Log::Error("Shader already in libary");
+			Log::Error("Shader not in libary");
 		}
 		return shaders[name];
 	}

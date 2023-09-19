@@ -14,5 +14,6 @@
 #include "renderer/Renderer.h"
 #include "renderer/Texture.h"
 #include "renderer/2D/2DRenderer.h"
+#include "renderer/FrameBuffer.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>

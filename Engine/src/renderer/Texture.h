@@ -17,6 +17,10 @@ namespace Engine{
 		int getWidth(){return width;}
 		int getHeight(){return height;}
 		void bind(unsigned int slot = 0);
+		int getId() const {return id;}
+
+		bool operator==(const Texture2D& other) const {return id == other.getId();}
+
 		private:
 		unsigned int id;
 		unsigned int width = 0;

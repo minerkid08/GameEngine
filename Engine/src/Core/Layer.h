@@ -11,7 +11,7 @@ namespace Engine{
 		virtual void attach(){}
 		virtual void detach(){}
 		virtual void update(float deltaTime){}
-		virtual void event(Event& event){}
+		virtual void event(Event* event){}
 		virtual void imGuiRender(){}
 
 		inline const std::string& getName() {return name;}

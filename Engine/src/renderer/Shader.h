@@ -28,6 +28,8 @@ namespace Engine{
 		void setValue(const std::string& name, const glm::mat3x3& value);
 		void setValue(const std::string& name, const glm::mat4x4& value);
 		//void setValue(std::string name, bool value);
+		
+		void setValue(const std::string& name, int* values, unsigned int count);
 
 		private:
 		unsigned int prgmid;

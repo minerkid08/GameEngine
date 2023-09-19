@@ -6,7 +6,7 @@
 #include <glfw/glfw3.h>
 
 namespace Engine{
-	class Window{
+	class API Window{
 		public:
 		using EventCallbackFn = std::function<void(Event&)>;
 		Window(unsigned int width, unsigned int height, std::string title);
@@ -28,6 +28,7 @@ namespace Engine{
 			return new Window(width, height, title);
 		}
 		void resize(int width, int height);
+		void setHint(int hint, int value);
 		private:
 		struct WindowData{
 			std::string title;

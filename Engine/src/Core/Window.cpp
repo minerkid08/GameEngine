@@ -56,11 +56,6 @@ namespace Engine{
 				}
 			}
 		});
-		glfwSetCharCallback(window, [](GLFWwindow* window, unsigned int code){
-			WindowData* a = (WindowData*)glfwGetWindowUserPointer(window);
-			KeyTypedEvent e(code);
-			a->callback(e);
-		});
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods){
 			WindowData* a = (WindowData*)glfwGetWindowUserPointer(window);
 			switch(action){
@@ -102,5 +97,8 @@ namespace Engine{
 		data->width = width;
 		data->height = height;
 		glViewport(0, 0, width, height);
+	}
+	void Window::setHint(int hint, int value){
+		glfwWindowHint(hint, value);
 	}
 }

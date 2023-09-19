@@ -14,19 +14,21 @@
 namespace Engine{
 	class API App{
 		public:
-		App();
+		App(const char* title);
+		App(int width, int height, const char* title);
 		~App();
 		void run();
 		void event(Event& e);
 		void pushLayer(Layer* layer);
 		void pushOverlay(Layer* overlay);
+		void close();
 		inline Window& getWindow(){return *window;}
 		static inline App& getInstance(){return *instance;}
 
 		private:
 		static App* instance;
-		bool windowClose(WindowCloseEvent& e);
-		bool windowResize(WindowResizeEvent& e);
+		bool windowClose(WindowCloseEvent* e);
+		bool windowResize(WindowResizeEvent* e);
 		uniqPtr<Window> window;
 		ImGuiLayer* uiLayer;
 		bool running = true;

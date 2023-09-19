@@ -9,13 +9,13 @@ namespace Engine{
 		public:
 		CameraController(float aspect);
 		void update(float deltaTime);
-		void event(Event& e);
+		void event(Event* e);
 		Camera& getCamera(){return cam;}
-		private:
-		bool mouseScroll(MouseScrollEvent& e);
-		bool windowResize(WindowResizeEvent& e);
-		float aspect;
 		float zoom = 1;
+		private:
+		bool mouseScroll(MouseScrollEvent* e);
+		bool windowResize(WindowResizeEvent* e);
+		float aspect;
 		glm::vec2 pos;
 		float moveSpeed = 1;
 		Camera cam;
