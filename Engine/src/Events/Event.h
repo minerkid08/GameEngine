@@ -34,8 +34,8 @@ namespace Engine{
 		inline bool isInCategory(int _category){
 			return getFlags() & _category;
 		}
-		private:
 		bool handled = false;
+		private:
 	}; 
 	class EventDispatcher{
 		public:

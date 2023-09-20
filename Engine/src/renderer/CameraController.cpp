@@ -30,4 +30,8 @@ namespace Engine{
 		cam.orthographic(-aspect * zoom, aspect * zoom, zoom, -zoom);
 		return false;
 	}
+	void CameraController::setAspect(float a){
+		aspect = a;
+		cam.orthographic(-aspect * zoom, aspect * zoom, zoom, -zoom);
+	}
 }

@@ -56,4 +56,11 @@ namespace Engine{
 		//static bool show = true;
 		//ImGui::ShowDemoWindow(&show);
 	}
+	void ImGuiLayer::event(Event* e){
+		if(blockEvents){
+			ImGuiIO& io = ImGui::GetIO();
+			e->handled |= e->isInCategory(EventCategory::CatMouse) & io.WantCaptureMouse;
+			e->handled |= e->isInCategory(EventCategory::CatKeyboard) & io.WantCaptureKeyboard;
+		}
+	}
 }

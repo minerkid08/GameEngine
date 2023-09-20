@@ -22,6 +22,7 @@ namespace Engine{
 		void pushLayer(Layer* layer);
 		void pushOverlay(Layer* overlay);
 		void close();
+		ImGuiLayer* getUiLayer(){return uiLayer;}
 		inline Window& getWindow(){return *window;}
 		static inline App& getInstance(){return *instance;}
 

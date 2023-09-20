@@ -18,5 +18,4 @@ class Layer2D : public Engine::Layer{
 	Engine::shdPtr<Engine::Texture2D> spriteSheet;
 	Engine::shdPtr<Engine::SubTex2D> coal;
 	Engine::shdPtr<Engine::SubTex2D> stone;
-	Engine::shdPtr<Engine::FrameBuffer> frameBuffer;
 };
