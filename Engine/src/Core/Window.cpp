@@ -82,6 +82,9 @@ namespace Engine{
 			MouseMoveEvent e((float)x,(float)y);
 			a->callback(e);
 		});
+		glfwSetErrorCallback([](int code, const char* desc){
+			Log::Error("GL error:" + std::to_string(code) + ", " + desc);
+		});
 	}
 	Window::~Window(){
 

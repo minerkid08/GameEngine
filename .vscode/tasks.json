@@ -12,6 +12,7 @@
 				"${workspaceFolder}/Engine/src/renderer/2D/*.cpp",
 				"${workspaceFolder}/Engine/src/Debug/*.cpp",
 				"${workspaceFolder}/Engine/src/Core/*.cpp",
+				"${workspaceFolder}/Engine/src/Scene/*.cpp",
 				"${workspaceFolder}/include/GLAD/glad.c",
 				"${workspaceFolder}/include/imgui/*.cpp",
                 "-o",

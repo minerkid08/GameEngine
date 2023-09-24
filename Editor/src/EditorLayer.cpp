@@ -1,11 +1,27 @@
 #include "EditorLayer.h"
+#include "Script.h"
 namespace Engine{
-	EditorLayer::EditorLayer() : Layer("e"), cameraController(1280.0f / 720.0f){}
+	EditorLayer::EditorLayer() : Layer("e"){}
 	void EditorLayer::attach(){
-		tex = std::make_shared<Texture2D>("Game/textures/tex2.png");
-		spriteSheet = std::make_shared<Texture2D>("Game/textures/sheet.png");
-		coal = std::make_shared<SubTex2D>(spriteSheet, glm::vec2(16, 16), glm::vec2(0, 0));
-		stone = std::make_shared<SubTex2D>(spriteSheet, glm::vec2(16, 16), glm::vec2(0, 1));
+		scene = std::make_shared<Scene>();
+		square = scene->createEnt();
+
+		Components::Transform& transform = square.getComp<Components::Transform>();
+		transform.pos = glm::vec3{0.0f, 0.0f, 0.0f};
+		transform.scale = glm::vec2{1.0f, 1.0f};
+		transform.rot = 0.0f;
+
+		square.addComp<Components::SpriteRenderer>();
+		
+		camera = scene->createEnt("camera");
+		camera.addComp<Components::Camera>(1280.0f / 720.0f, 1.0f);
+		camera.addComp<Components::NativeScript>().bind<Script>();
+
+		camera2 = scene->createEnt("camera2");
+		camera2.addComp<Components::Camera>(1280.0f / 720.0f, 1.0f);
+		camera2.getComp<Components::Transform>().pos = {0.5f, 0.5f, 0.0f};
+
+
 		open = new bool(false);
 		FrameBufferSpec spec;
 		spec.width = 1280;
@@ -16,23 +32,14 @@ namespace Engine{
 
 	}
 	void EditorLayer::update(float deltaTime){
-		cameraController.update(deltaTime);
+		scene->update(deltaTime);
+		
 		frameBuffer->bind();
+
 		Renderer::clear();
-		Renderer2D::beginScene(cameraController.getCamera());
-		transform.pos = {0.0f, 0.0f,-0.1};
-		transform.scale = {1.0f,2.0f};
-		transform.rot = 45.0f;
-		Renderer2D::draw(transform, color);
-		for(int x = -1; x < 2; x++){
-			for(int y = -1; y < 2; y++){
-				transform.pos = {x * 6.0f,y * 6.0f,-0.2};
-				transform.scale = {6.0f,6.0f};
-				transform.rot = 0.0f;
-				Renderer2D::draw(transform, (x == 0 && y == 0 ? coal : stone), 1.0f);
-			}
-		}
-		Renderer2D::endScene();
+		square.getComp<Components::SpriteRenderer>().color = color;	
+		scene->update(deltaTime);
+		
 		frameBuffer->unbind();
 	}
 	void EditorLayer::imGuiRender(){
@@ -120,7 +127,12 @@ namespace Engine{
 	    }
 		ImGui::Begin("E");
 		ImGui::ColorPicker3("color", glm::value_ptr(color), ImGuiColorEditFlags_PickerHueWheel);
+
+		ImGui::Checkbox("camera1", &camera.getComp<Components::Camera>().mainCamera);
+		ImGui::Checkbox("camera2", &camera2.getComp<Components::Camera>().mainCamera);
+		
 		ImGui::End();
+		
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0,0});
 		ImGui::Begin("Viewport");
 		App::getInstance().getUiLayer()->setBlockEvents(!(ImGui::IsWindowFocused() && ImGui::IsWindowHovered()));
@@ -128,8 +140,7 @@ namespace Engine{
 		if(viewportSize != *((glm::vec2*)&viewportPanelSize)){
 			viewportSize = {ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y};
 			frameBuffer->resize((int)viewportSize.x, (int)viewportSize.y);
-			float aspect = viewportSize.x / viewportSize.y;
-			cameraController.setAspect(aspect);
+			scene->viewportResize((int)viewportSize.x, (int)viewportSize.y, 1.0f);
 		}
 		ImGui::Image((void*)frameBuffer->getColor(), ImVec2{viewportSize.x, viewportSize.y});
 		ImGui::End();
@@ -137,6 +148,5 @@ namespace Engine{
 	    ImGui::End();
 	}
 	void EditorLayer::event(Event* e){
-		cameraController.event(e);
 	}
 }
