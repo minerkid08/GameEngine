@@ -9,6 +9,7 @@
 	#define API __declspec(dllimport)
 #endif
 #define IMGUI_API API
+#define YAML_CPP_API API
 
 #define BindFn(fn) std::bind(&fn, this, std::placeholders::_1)
 

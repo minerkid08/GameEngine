@@ -13,6 +13,8 @@ namespace Engine{
 		Entity createEnt(const std::string& name = "thing with no name");
 		void removeEnt(const Entity& ent);
 
+		void clear();
+
 		entt::registry& getReg(){return registry;}
 		private:
 		int width = 0;

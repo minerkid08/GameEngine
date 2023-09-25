@@ -39,6 +39,13 @@ namespace Engine{
 			SpriteRenderer(const glm::vec4 _color){
 				color = _color;
 			}
+			void setMode(int _mode){
+				if(_mode == 1){
+					mode == Type::Tex;
+				}else{
+					mode = Type::Color;
+				}
+			}
 			void texture(){
 				tex = std::make_shared<Texture2D>(path.empty() ? "Engine/Textures/logo.png" : path.c_str());
 			}

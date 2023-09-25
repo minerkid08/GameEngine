@@ -1,17 +1,26 @@
 #include "EditorLayer.h"
 #include "Script.h"
+
 namespace Engine{
 	EditorLayer::EditorLayer() : Layer("e"){}
 	void EditorLayer::attach(){
 		scene = std::make_shared<Scene>();
 
+		serializer.setEnt(scene);
+
+		scene->createEnt().addComp<Components::NativeScript>().bind<Script>();
+
 		sceneHierarchy.setContext(scene);
+
+		memset(savePath, 0, sizeof(savePath));
 
 		open = new bool(false);
 		FrameBufferSpec spec;
 		spec.width = 1280;
 		spec.height = 720;
 		frameBuffer = std::make_shared<FrameBuffer>(spec);
+	}
+	EditorLayer::~EditorLayer(){
 	}
 	void EditorLayer::detach(){
 
@@ -73,14 +82,25 @@ namespace Engine{
 	        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 	        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 	    }
-
 	    if (ImGui::BeginMenuBar()){
 	        if (ImGui::BeginMenu("File")){
+				if(ImGui::MenuItem("New")){
+					scene = std::make_shared<Scene>();
+					serializer.setEnt(scene);
+					sceneHierarchy.setContext(scene);
+				}
+				if(ImGui::MenuItem("Save")){
+					saveLoad = true;
+				}
+				if(ImGui::MenuItem("Open")){
+					saveLoad = true;
+				}
 	            if(ImGui::MenuItem("Exit")){
 					App::getInstance().close();
-				};
+				}
 	            ImGui::EndMenu();
 	        }
+			
 			if (ImGui::BeginMenu("Edit")){
 	            if(ImGui::MenuItem("Exit")){
 					App::getInstance().close();
@@ -107,6 +127,24 @@ namespace Engine{
 	        }
 	        ImGui::EndMenuBar();
 	    }
+		if(saveLoad){
+			ImGui::Begin("Save/Load");
+			ImGui::InputText("path", savePath, sizeof(savePath));
+			if(ImGui::Button("Save")){
+				serializer.seralize(savePath);
+			}
+			if(ImGui::Button("Load")){
+				scene = std::make_shared<Scene>();
+				serializer.setEnt(scene);
+				sceneHierarchy.setContext(scene);
+				serializer.deseralize(savePath);
+			}
+			if(ImGui::Button("Close")){
+				saveLoad = false;
+			}
+			ImGui::End();
+		}
+		
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0,0});
 		ImGui::Begin("Viewport");
 		App::getInstance().getUiLayer()->setBlockEvents(!(ImGui::IsWindowFocused() && ImGui::IsWindowHovered()));

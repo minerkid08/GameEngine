@@ -26,16 +26,15 @@ namespace Engine{
 
 		bool drawing = false;
 		auto cameraGroup = registry.group<Components::Camera>(entt::get<Components::Transform>);
-		for(auto& ent : cameraGroup){
+		for(auto ent : cameraGroup){
 			auto [camera, transform] = cameraGroup.get<Components::Camera, Components::Transform>(ent);
 			if(camera.mainCamera){
 				camera.camera.setPos(transform.pos);
 				camera.camera.setRot(transform.rot);
 				Renderer2D::beginScene(camera.camera);
 				drawing = true;
-				break;
 			}
-		}
+		};
 		if(!drawing){return;}
 		auto group = registry.group<Components::Transform>(entt::get<Components::SpriteRenderer>);
 		for(auto ent : group){
@@ -65,8 +64,15 @@ namespace Engine{
 			auto& camera = view.get<Components::Camera>(ent);
 			if(!camera.fixedAspect){
 				float aspect = (float)width / (float)height;
-				camera.camera.orthographic(-aspect * zoom, aspect * zoom, zoom, -zoom);
+				camera.camera.orthographic(aspect, camera.camera.getZoom());
 			}
+		}
+	}
+	void Scene::clear(){
+		return;
+		auto group = registry.group<Components::Transform>(entt::get<Components::Transform>);
+		for(auto& ent : group){
+			registry.destroy(ent);
 		}
 	}
 }

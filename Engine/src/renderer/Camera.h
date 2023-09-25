@@ -15,26 +15,31 @@ namespace Engine{
 			viewMat = glm::mat4x4(1);
 			updateMat();
 		}
-		void orthographic(float left, float right, float up, float down, float near_ = -1.0f, float far_ = 1.0f){
-			projMat = glm::ortho(left,right,down,up,near_,far_);
+		//void orthographic(float left, float right, float up, float down, float near_ = -1.0f, float far_ = 1.0f){
+		//	projMat = glm::ortho(left,right,down,up,near_,far_);
+		//	nearPlane = near_;
+		//	farPlane = far_;
+		//	mode = CameraMode::Orthographic;
+		//	viewMat = glm::mat4x4(1);
+		//	updateMat();
+		//}
+		void orthographic(int width, int height, float _zoom = 1, float near_ = -1.0f, float far_ = 1.0f){
 			nearPlane = near_;
 			farPlane = far_;
-			mode = CameraMode::Orthographic;
-			viewMat = glm::mat4x4(1);
+			zoom = _zoom;
+			aspect = (float)width / (float)height;
+			projMat = glm::ortho(-aspect * zoom, aspect * zoom, zoom, -zoom);
 			updateMat();
 		}
-		void orthographic(int _width, int _height, float _zoom = 1, float near_ = -1.0f, float far_ = 1.0f){
+		void orthographic(float _aspect, float _zoom = 1.0f, float near_ = -1.0f, float far_ = 1.0f){
 			nearPlane = near_;
 			farPlane = far_;
-			width = _width;
-			height = _height;
 			zoom = _zoom;
-			float aspect = (float)width / (float)height;
+			aspect = _aspect;
 			projMat = glm::ortho(-aspect * zoom, aspect * zoom, zoom, -zoom);
 			updateMat();
 		}
 		void orthographic(){
-			float aspect = (float)width / (float)height;
 			projMat = glm::ortho(-aspect * zoom, aspect * zoom, zoom, -zoom);
 			updateMat();
 		}
@@ -48,8 +53,7 @@ namespace Engine{
 		float& getNear(){return nearPlane;}
 		float& getFar(){return farPlane;}
 		float& getZoom(){return zoom;}
-		int& getWidth(){return width;}
-		int& getHeight(){return height;}
+		float& getAspect(){return aspect;}
 
 		private:
 		glm::mat4x4 projMat;
@@ -59,8 +63,7 @@ namespace Engine{
 		CameraMode mode;
 		float nearPlane = -1.0f;
 		float farPlane = 1.0f;
-		int width = 0;
-		int height = 0;
+		float aspect = 0;
 		float zoom = 1.0f;
 		float rot = 0.0f;
 		void updateMat(){

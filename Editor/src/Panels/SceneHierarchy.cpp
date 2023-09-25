@@ -3,11 +3,12 @@
 namespace Engine{
 	void SceneHierarchy::setContext(const shdPtr<Scene>& _scene){
 		scene = _scene;
+		selected = {};
 	}
 	void SceneHierarchy::uiRender(){
 		ImGui::Begin("Scene Hierarchy");
 		if(ImGui::Button("add entity")){
-			scene->createEnt();
+			selected = scene->createEnt();
 		}
 		scene->getReg().each([this](entt::entity ent){
 			drawEntity({scene.get(), ent});
@@ -80,8 +81,7 @@ namespace Engine{
 				changed |= ImGui::DragFloat("far", &camera.camera.getFar(), 0.1);
 				changed |= ImGui::DragFloat("zoom", &camera.camera.getZoom(), 0.1, 0);
 				if(camera.fixedAspect){
-					changed |= ImGui::DragInt("width", &camera.camera.getWidth(), 1, 0);
-					changed |= ImGui::DragInt("height", &camera.camera.getHeight(), 1, 0);
+					changed |= ImGui::DragFloat("aspect", &camera.camera.getAspect(), 0.1, 0);
 				}
 				if(changed){
 					camera.camera.orthographic();

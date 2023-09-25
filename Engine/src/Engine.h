@@ -9,6 +9,7 @@
 #include "Core/ImGuiLayer.h"
 #include "Core/Mesh.h"
 #include "Core/Time.h"
+#include "Core/FileDialogs.h"
 #include "Debug/ProfilingLayer.h"
 #include "Scene/Scene.h"
 #include "Scene/Components.h"
