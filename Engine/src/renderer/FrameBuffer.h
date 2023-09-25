@@ -13,13 +13,14 @@ namespace Engine{
 		~FrameBuffer();
 		FrameBufferSpec getSpec(){return spec;}
 		void regen(const FrameBufferSpec& _spec);
+		void resize(int width, int height);
 		void bind();
 		void unbind();
 		uint32_t getColor(){return color;}
 		private:
 		FrameBufferSpec spec;
-		uint32_t id;
-		uint32_t color;
-		uint32_t depth;
+		uint32_t id = 0;
+		uint32_t color = 0;
+		uint32_t depth = 0;
 	};
 }

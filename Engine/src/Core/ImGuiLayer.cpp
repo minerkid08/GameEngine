@@ -16,6 +16,8 @@ namespace Engine{
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Engine/fonts/OpenSans-Bold.ttf", 20.0f);
 
 		ImGuiStyle& style = ImGui::GetStyle();
 		style.WindowRounding = 0.0f;
@@ -55,5 +57,12 @@ namespace Engine{
 	void ImGuiLayer::imGuiRender(){
 		//static bool show = true;
 		//ImGui::ShowDemoWindow(&show);
+	}
+	void ImGuiLayer::event(Event* e){
+		if(blockEvents){
+			ImGuiIO& io = ImGui::GetIO();
+			e->handled |= e->isInCategory(EventCategory::CatMouse) & io.WantCaptureMouse;
+			e->handled |= e->isInCategory(EventCategory::CatKeyboard) & io.WantCaptureKeyboard;
+		}
 	}
 }

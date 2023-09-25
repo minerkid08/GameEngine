@@ -10,6 +10,7 @@ namespace Engine{
 		CameraController(float aspect);
 		void update(float deltaTime);
 		void event(Event* e);
+		void setAspect(float a);
 		Camera& getCamera(){return cam;}
 		float zoom = 1;
 		private:

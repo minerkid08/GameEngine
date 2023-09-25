@@ -4,7 +4,7 @@
 namespace Engine{
 	CameraController::CameraController(float _aspect){
 		aspect = _aspect;
-		cam.orthographic(-aspect * zoom, aspect * zoom, zoom, -zoom);
+		cam.orthographic(aspect, zoom);
 	}
 	void CameraController::update(float deltaTime){
 		if(Input::keyDown(EngineKeycode_W)){pos.y += moveSpeed * deltaTime;}
@@ -22,12 +22,16 @@ namespace Engine{
 		zoom -= e->y * 0.25f;
 		zoom = std::max(zoom, 0.25f);
 		moveSpeed = zoom;
-		cam.orthographic(-aspect * zoom, aspect * zoom, zoom, -zoom);
+		cam.orthographic(aspect, zoom);
 		return false;
 	}
 	bool CameraController::windowResize(WindowResizeEvent* e){
 		aspect = (float)e->width/(float)e->height;
-		cam.orthographic(-aspect * zoom, aspect * zoom, zoom, -zoom);
+		cam.orthographic(aspect, zoom);
 		return false;
+	}
+	void CameraController::setAspect(float a){
+		aspect = a;
+		cam.orthographic(aspect, zoom);
 	}
 }

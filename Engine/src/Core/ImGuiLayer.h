@@ -14,10 +14,14 @@ namespace Engine{
 		void detach();
 		void update(float deltaTime);
 		void imGuiRender();
+		void event(Event* e);
+
+		void setBlockEvents(bool e){blockEvents = e;}
 
 		void begin();
 		void end();
 		private:
+		bool blockEvents = true;
 		float time = 0;
 	};
 }

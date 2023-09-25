@@ -7,9 +7,16 @@ namespace Engine{
 	}
 	FrameBuffer::~FrameBuffer(){
 		glDeleteFramebuffers(1, &id);
+		glDeleteTextures(1, &color);
+		glDeleteTextures(1, &depth);
 	}
 	void FrameBuffer::regen(const FrameBufferSpec& _spec){
 		spec = _spec;
+		if(id){
+			glDeleteFramebuffers(1, &id);
+			glDeleteTextures(1, &color);
+			glDeleteTextures(1, &depth);
+		}
 		glCreateFramebuffers(1, &id);
 		glBindFramebuffer(GL_FRAMEBUFFER, id);
 		glCreateTextures(GL_TEXTURE_2D, 1, &color);
@@ -30,9 +37,16 @@ namespace Engine{
 		if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE){
 			Log::Error("Frame buffer could not be created");
 		}
+		unbind();
+	}
+	void FrameBuffer::resize(int width, int height){
+		spec.width = width;
+		spec.height = height;
+		regen(spec);
 	}
 	void FrameBuffer::bind(){
 		glBindFramebuffer(GL_FRAMEBUFFER, id);
+		glViewport(0, 0, spec.width, spec.height);
 	}
 	void FrameBuffer::unbind(){
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

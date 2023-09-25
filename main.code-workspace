@@ -73,7 +73,14 @@
 			"stop_token": "cpp",
 			"thread": "cpp",
 			"variant": "cpp",
-			"map": "cpp"
+			"map": "cpp",
+			"list": "cpp",
+			"set": "cpp",
+			"unordered_set": "cpp",
+			"forward_list": "cpp",
+			"any": "cpp",
+			"ranges": "cpp",
+			"valarray": "cpp"
 		}
 	}
 }
