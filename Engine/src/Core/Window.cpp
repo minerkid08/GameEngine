@@ -3,8 +3,9 @@
 #include "Events/AppEvent.h"
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
+#include <stb/stbImage.h>
 namespace Engine{
-	Window::Window(unsigned int _width, unsigned int _height, std::string _title){
+	Window::Window(unsigned int _width, unsigned int _height, std::string _title, std::string logoPath){
 		data = new WindowData();
 		data->width = _width;
 		data->height = _height;
@@ -22,6 +23,11 @@ namespace Engine{
 		window = glfwCreateWindow(data->width, data->height, data->title.c_str(), NULL, NULL);
 		glfwMakeContextCurrent(window);
 		glfwSetWindowUserPointer(window, data);
+
+		GLFWimage image; 
+		image.pixels = stbi_load(logoPath.c_str(), &image.width, &image.height, 0, 0); 
+		glfwSetWindowIcon(window, 1, &image); 
+		stbi_image_free(image.pixels);
 
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		if(!status){

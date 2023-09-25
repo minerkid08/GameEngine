@@ -14,12 +14,14 @@ namespace Engine{
 		auto scriptGroup = registry.view<Components::NativeScript>();
 		for(auto& ent : scriptGroup){
 			auto& comp = scriptGroup.get<Components::NativeScript>(ent);
-			if(!comp.script){
-				comp.instFn();
-				comp.script->ent = {this, ent};
-				comp.createFn();
+			if(comp.enabled){
+				if(!comp.script){
+					comp.instScript();
+					comp.script->ent = {this, ent};
+					comp.script->create();
+				}
+				comp.script->update(deltaTime);
 			}
-			comp.updateFn(deltaTime);
 		}
 
 		bool drawing = false;
@@ -31,14 +33,18 @@ namespace Engine{
 				camera.camera.setRot(transform.rot);
 				Renderer2D::beginScene(camera.camera);
 				drawing = true;
-				
+				break;
 			}
 		}
 		if(!drawing){return;}
 		auto group = registry.group<Components::Transform>(entt::get<Components::SpriteRenderer>);
 		for(auto ent : group){
 			auto [transform, sprite] = group.get<Components::Transform, Components::SpriteRenderer>(ent);
-			Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.color);
+			if(sprite.mode == Components::SpriteRenderer::Type::Color){
+				Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.color);
+			}else{
+				Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.tex, sprite.color, sprite.tile);
+			}
 		}
 		Renderer2D::endScene();
 	}
@@ -47,6 +53,9 @@ namespace Engine{
 		ent.addComp<Components::Transform>();
 		ent.addComp<Components::Tag>(name);
 		return ent;
+	}
+	void Scene::removeEnt(const Entity& ent){
+		registry.destroy(ent);
 	}
 	void Scene::viewportResize(int _width, int _height, float zoom){
 		width = _width;

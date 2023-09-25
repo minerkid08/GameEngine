@@ -25,6 +25,10 @@ namespace Engine{
 			}
 			return ent.getComp<T>();
 		}
+		protected:
+		virtual void create(){}
+		virtual void destroy(){}
+		virtual void update(float deltaTime){}
 		private:
 		friend class Scene;
 		Entity ent;

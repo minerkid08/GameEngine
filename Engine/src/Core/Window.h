@@ -9,7 +9,7 @@ namespace Engine{
 	class API Window{
 		public:
 		using EventCallbackFn = std::function<void(Event&)>;
-		Window(unsigned int width, unsigned int height, std::string title);
+		Window(unsigned int width, unsigned int height, std::string title, std::string logoPath = "Engine/Textures/logo.png");
 		~Window();
 		void update();
 		void shutdown();

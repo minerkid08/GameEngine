@@ -9,8 +9,11 @@ namespace Engine{
 		~Scene();
 		void update(float deltaTime);
 		void viewportResize(int width, int height, float zoom);
-		Entity createEnt(const std::string& name = "thing with no name");
 
+		Entity createEnt(const std::string& name = "thing with no name");
+		void removeEnt(const Entity& ent);
+
+		entt::registry& getReg(){return registry;}
 		private:
 		int width = 0;
 		int height = 0;

@@ -44,6 +44,7 @@
                 "-fdiagnostics-color=always",
                 "-g",
 				"${workspaceFolder}/Editor/src/*.cpp",
+				"${workspaceFolder}/Editor/src/Panels/*.cpp",
                 "-o",
                 "${workspaceFolder}/bin/editor.exe",
 				"-L${workspaceFolder}/bin",

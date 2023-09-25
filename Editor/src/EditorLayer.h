@@ -1,5 +1,6 @@
 #pragma once
 #include <Engine.h>
+#include "Panels/SceneHierarchy.h"
 namespace Engine{
 	class EditorLayer : public Layer{
 		public:
@@ -16,9 +17,6 @@ namespace Engine{
 		shdPtr<FrameBuffer> frameBuffer;
 		shdPtr<Scene> scene;
 
-		glm::vec4 color = {0.5f, 0.5f, 0.5f, 1.0f};
-		Entity camera;
-		Entity camera2;
-		Entity square;
+		SceneHierarchy sceneHierarchy;
 	};
 }

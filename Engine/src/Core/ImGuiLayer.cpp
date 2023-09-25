@@ -16,6 +16,8 @@ namespace Engine{
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Engine/fonts/OpenSans-Bold.ttf", 20.0f);
 
 		ImGuiStyle& style = ImGui::GetStyle();
 		style.WindowRounding = 0.0f;

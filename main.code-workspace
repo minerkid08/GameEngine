@@ -74,7 +74,9 @@
 			"thread": "cpp",
 			"variant": "cpp",
 			"map": "cpp",
-			"list": "cpp"
+			"list": "cpp",
+			"set": "cpp",
+			"unordered_set": "cpp"
 		}
 	}
 }

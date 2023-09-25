@@ -4,23 +4,8 @@ namespace Engine{
 	EditorLayer::EditorLayer() : Layer("e"){}
 	void EditorLayer::attach(){
 		scene = std::make_shared<Scene>();
-		square = scene->createEnt();
 
-		Components::Transform& transform = square.getComp<Components::Transform>();
-		transform.pos = glm::vec3{0.0f, 0.0f, 0.0f};
-		transform.scale = glm::vec2{1.0f, 1.0f};
-		transform.rot = 0.0f;
-
-		square.addComp<Components::SpriteRenderer>();
-		
-		camera = scene->createEnt("camera");
-		camera.addComp<Components::Camera>(1280.0f / 720.0f, 1.0f);
-		camera.addComp<Components::NativeScript>().bind<Script>();
-
-		camera2 = scene->createEnt("camera2");
-		camera2.addComp<Components::Camera>(1280.0f / 720.0f, 1.0f);
-		camera2.getComp<Components::Transform>().pos = {0.5f, 0.5f, 0.0f};
-
+		sceneHierarchy.setContext(scene);
 
 		open = new bool(false);
 		FrameBufferSpec spec;
@@ -32,12 +17,9 @@ namespace Engine{
 
 	}
 	void EditorLayer::update(float deltaTime){
-		scene->update(deltaTime);
-		
 		frameBuffer->bind();
 
 		Renderer::clear();
-		square.getComp<Components::SpriteRenderer>().color = color;	
 		scene->update(deltaTime);
 		
 		frameBuffer->unbind();
@@ -125,14 +107,6 @@ namespace Engine{
 	        }
 	        ImGui::EndMenuBar();
 	    }
-		ImGui::Begin("E");
-		ImGui::ColorPicker3("color", glm::value_ptr(color), ImGuiColorEditFlags_PickerHueWheel);
-
-		ImGui::Checkbox("camera1", &camera.getComp<Components::Camera>().mainCamera);
-		ImGui::Checkbox("camera2", &camera2.getComp<Components::Camera>().mainCamera);
-		
-		ImGui::End();
-		
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0,0});
 		ImGui::Begin("Viewport");
 		App::getInstance().getUiLayer()->setBlockEvents(!(ImGui::IsWindowFocused() && ImGui::IsWindowHovered()));
@@ -142,9 +116,10 @@ namespace Engine{
 			frameBuffer->resize((int)viewportSize.x, (int)viewportSize.y);
 			scene->viewportResize((int)viewportSize.x, (int)viewportSize.y, 1.0f);
 		}
-		ImGui::Image((void*)frameBuffer->getColor(), ImVec2{viewportSize.x, viewportSize.y});
+		ImGui::Image((void*)frameBuffer->getColor(), ImVec2{viewportSize.x, viewportSize.y}, ImVec2{0,1}, ImVec2{1,0});
 		ImGui::End();
 		ImGui::PopStyleVar();
+		sceneHierarchy.uiRender();
 	    ImGui::End();
 	}
 	void EditorLayer::event(Event* e){

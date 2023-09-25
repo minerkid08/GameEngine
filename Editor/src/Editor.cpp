@@ -5,8 +5,7 @@
 namespace Engine{
 	class Editor : public App {
 		public:
-		Editor() : App(1280, 720, "Editor"){
-			pushLayer(new ProfilingLayer());
+		Editor() : App(1280, 720, "Sisyphus the Editor"){
 			pushLayer(new EditorLayer());
 		}
 	};
