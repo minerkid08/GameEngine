@@ -13,6 +13,7 @@ namespace Engine{
 	int FileExplorer::render(const char* ext, bool makeFile){
 		ImGui::Begin("File Explorer");
 		ImGui::Text(curPath.string().c_str());
+		ImGui::SameLine();
 		if(ImGui::Button("x")){
 			ImGui::End();
 			return 2;
