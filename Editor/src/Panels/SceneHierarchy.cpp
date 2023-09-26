@@ -1,5 +1,5 @@
 #include "SceneHierarchy.h"
-
+#include <filesystem>
 namespace Engine{
 	void SceneHierarchy::setContext(const shdPtr<Scene>& _scene){
 		scene = _scene;
@@ -98,12 +98,18 @@ namespace Engine{
 					char buf[256];
 					memset(buf, 0, sizeof(buf));
 					strcpy(buf, renderer.path.c_str());
-					if(ImGui::InputText("tex path", buf, sizeof(buf))){
-						renderer.path = std::string(buf);
+					ImGui::ImageButton((ImTextureID)renderer.tex->getId(), ImVec2(256, 256));
+					if(ImGui::BeginDragDropTarget()){
+						if(auto payload = ImGui::AcceptDragDropPayload("ContentBrowserItem")){
+							const wchar_t* data = (wchar_t*)payload->Data;
+							std::filesystem::path path = data;
+							if(path.extension() == ".png"){
+								renderer.path = path.string();
+								renderer.texture();
+							}
+						}
 					}
-					if(ImGui::Button("find texture")){
-						renderer.texture();
-					}
+					ImGui::TextWrapped(renderer.path.c_str());
 					ImGui::ColorEdit4("tint", glm::value_ptr(renderer.color));
 					ImGui::DragFloat("tile", &renderer.tile, 0.1, 0);
 				}

@@ -9,7 +9,7 @@ namespace Engine{
 		int channels;
 		int _width;
 		int _height;
-		stbi_set_flip_vertically_on_load(1);
+		//stbi_set_flip_vertically_on_load(1);
 		unsigned char* data = stbi_load(filename.c_str(), &_width, &_height, &channels, 0);
 		width = _width;
 		height = _height;

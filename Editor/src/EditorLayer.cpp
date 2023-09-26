@@ -2,12 +2,12 @@
 #include "Script.h"
 
 namespace Engine{
-	EditorLayer::EditorLayer() : Layer("e"){}
+	EditorLayer::EditorLayer() : Layer("e"), editorCamera(0.0f){}
 	void EditorLayer::attach(){
 		scene = std::make_shared<Scene>();
+		contentBrowser.setMainPath("Assets");
 
 		serializer.setEnt(scene);
-
 		scene->createEnt().addComp<Components::NativeScript>().bind<Script>();
 
 		sceneHierarchy.setContext(scene);
@@ -29,7 +29,10 @@ namespace Engine{
 		frameBuffer->bind();
 
 		Renderer::clear();
-		scene->update(deltaTime);
+		if(mouseOnViewport){
+			editorCamera.update(deltaTime);
+		}
+		scene->updateEditor(deltaTime, editorCamera.getCamera());
 		
 		frameBuffer->unbind();
 	}
@@ -147,19 +150,38 @@ namespace Engine{
 		
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0,0});
 		ImGui::Begin("Viewport");
-		App::getInstance().getUiLayer()->setBlockEvents(!(ImGui::IsWindowFocused() && ImGui::IsWindowHovered()));
+		mouseOnViewport = (ImGui::IsWindowFocused() && ImGui::IsWindowHovered());
+		App::getInstance().getUiLayer()->setBlockEvents(!mouseOnViewport);
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		if(viewportSize != *((glm::vec2*)&viewportPanelSize)){
 			viewportSize = {ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y};
 			frameBuffer->resize((int)viewportSize.x, (int)viewportSize.y);
 			scene->viewportResize((int)viewportSize.x, (int)viewportSize.y, 1.0f);
+			editorCamera.setAspect(viewportSize.x / viewportSize.y);
 		}
 		ImGui::Image((void*)frameBuffer->getColor(), ImVec2{viewportSize.x, viewportSize.y}, ImVec2{0,1}, ImVec2{1,0});
+		if(ImGui::BeginDragDropTarget()){
+			if(auto payload = ImGui::AcceptDragDropPayload("ContentBrowserItem")){
+				const wchar_t* data = (wchar_t*)payload->Data;
+				std::filesystem::path path = data;
+				if(path.extension() == ".scene")
+					openScene(data);
+			}
+
+		}
 		ImGui::End();
 		ImGui::PopStyleVar();
 		sceneHierarchy.uiRender();
+		contentBrowser.render();
 	    ImGui::End();
 	}
 	void EditorLayer::event(Event* e){
+		editorCamera.event(e);
+	}
+	void EditorLayer::openScene(const std::filesystem::path& path){
+		scene = std::make_shared<Scene>();
+		serializer.setEnt(scene);
+		sceneHierarchy.setContext(scene);
+		serializer.deseralize(path.string());
 	}
 }

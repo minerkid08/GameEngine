@@ -71,6 +71,7 @@ namespace Engine{
 		out["entities"].push_back(j);
 	}
 	void Serializer::deseralize(const std::string& path){
+		Log::Info("loading: " + path);
 		std::ifstream stream(path);
 		std::stringstream sstream;
 		sstream << stream.rdbuf();

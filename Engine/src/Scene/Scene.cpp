@@ -10,7 +10,7 @@ namespace Engine{
 	Scene::~Scene(){
 
 	}
-	void Scene::update(float deltaTime){
+	void Scene::updateRuntime(float deltaTime){
 		auto scriptGroup = registry.view<Components::NativeScript>();
 		for(auto& ent : scriptGroup){
 			auto& comp = scriptGroup.get<Components::NativeScript>(ent);
@@ -36,6 +36,19 @@ namespace Engine{
 			}
 		};
 		if(!drawing){return;}
+		auto group = registry.group<Components::Transform>(entt::get<Components::SpriteRenderer>);
+		for(auto ent : group){
+			auto [transform, sprite] = group.get<Components::Transform, Components::SpriteRenderer>(ent);
+			if(sprite.mode == Components::SpriteRenderer::Type::Color){
+				Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.color);
+			}else{
+				Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.tex, sprite.color, sprite.tile);
+			}
+		}
+		Renderer2D::endScene();
+	}
+	void Scene::updateEditor(float deltaTime, Camera& camera){
+		Renderer2D::beginScene(camera);
 		auto group = registry.group<Components::Transform>(entt::get<Components::SpriteRenderer>);
 		for(auto ent : group){
 			auto [transform, sprite] = group.get<Components::Transform, Components::SpriteRenderer>(ent);
