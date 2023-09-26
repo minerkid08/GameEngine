@@ -3,6 +3,7 @@
 #include "Scene/Seralizer.h"
 #include "Panels/SceneHierarchy.h"
 #include "Panels/ContnentBrowser.h"
+#include "Panels/FileExplorer.h"
 namespace Engine{
 	class EditorLayer : public Layer{
 		public:
@@ -22,11 +23,13 @@ namespace Engine{
 
 		Serializer serializer;
 		bool mouseOnViewport = false;
-		char savePath[256];
-		bool saveLoad = false;
+		bool saving = false;
+		bool loading = false;
 		CameraController editorCamera;
 		SceneHierarchy sceneHierarchy;
 		ContentBrowser contentBrowser;
+
+		FileExplorer explorer;
 
 		void openScene(const std::filesystem::path& path);
 	};

@@ -6,13 +6,12 @@ namespace Engine{
 	void EditorLayer::attach(){
 		scene = std::make_shared<Scene>();
 		contentBrowser.setMainPath("Assets");
+		explorer.setMainPath("Assets");
 
 		serializer.setEnt(scene);
 		scene->createEnt().addComp<Components::NativeScript>().bind<Script>();
 
 		sceneHierarchy.setContext(scene);
-
-		memset(savePath, 0, sizeof(savePath));
 
 		open = new bool(false);
 		FrameBufferSpec spec;
@@ -93,10 +92,16 @@ namespace Engine{
 					sceneHierarchy.setContext(scene);
 				}
 				if(ImGui::MenuItem("Save")){
-					saveLoad = true;
+					if(!loading){
+						saving = true;
+						explorer.reset();
+					}
 				}
 				if(ImGui::MenuItem("Open")){
-					saveLoad = true;
+					if(!saving){
+						loading = true;
+						explorer.reset();
+					}
 				}
 	            if(ImGui::MenuItem("Exit")){
 					App::getInstance().close();
@@ -130,22 +135,24 @@ namespace Engine{
 	        }
 	        ImGui::EndMenuBar();
 	    }
-		if(saveLoad){
-			ImGui::Begin("Save/Load");
-			ImGui::InputText("path", savePath, sizeof(savePath));
-			if(ImGui::Button("Save")){
-				serializer.seralize(savePath);
+		if(saving){
+			if(int i = explorer.render(".scene", true)){
+				if(i == 1){
+					serializer.seralize(explorer.outPath.string());
+				}
+				saving = false;
 			}
-			if(ImGui::Button("Load")){
-				scene = std::make_shared<Scene>();
-				serializer.setEnt(scene);
-				sceneHierarchy.setContext(scene);
-				serializer.deseralize(savePath);
+		}
+		if(loading){
+			if(int i = explorer.render(".scene", false)){
+				if(i == 1){
+					scene = std::make_shared<Scene>();
+					serializer.setEnt(scene);
+					sceneHierarchy.setContext(scene);
+					serializer.deseralize(explorer.outPath.string());
+				}
+				loading = false;
 			}
-			if(ImGui::Button("Close")){
-				saveLoad = false;
-			}
-			ImGui::End();
 		}
 		
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0,0});
