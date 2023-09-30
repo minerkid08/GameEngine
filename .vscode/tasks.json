@@ -45,12 +45,15 @@
                 "-g",
 				"${workspaceFolder}/Editor/src/*.cpp",
 				"${workspaceFolder}/Editor/src/Panels/*.cpp",
+				"${workspaceFolder}/Editor/src/lua/*.cpp",
                 "-o",
                 "${workspaceFolder}/bin/editor.exe",
 				"-L${workspaceFolder}/bin",
 				"-lengine",
+				"-llua54",
 				"-I${workspaceFolder}/include",
-				"-I${workspaceFolder}/Engine/src"
+				"-I${workspaceFolder}/Engine/src",
+				"-I${workspaceFolder}/Editor/src"
             ],
             "options": {
                 "cwd": "c:\\raylib\\w64devkit\\bin"

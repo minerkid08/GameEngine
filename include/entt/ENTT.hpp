@@ -16403,7 +16403,8 @@ public:
         const auto elem = sparse_ptr(entt);
         constexpr auto cap = traits_type::to_entity(null);
         // testing versions permits to avoid accessing the packed array
-        return elem && (((~cap & traits_type::to_integral(entt)) ^ traits_type::to_integral(*elem)) < cap);
+        int i = elem && (((~cap & traits_type::to_integral(entt)) ^ traits_type::to_integral(*elem)) < cap);
+		return i;
     }
 
     /**
@@ -16429,7 +16430,9 @@ public:
      * @return The position of the entity in the sparse set.
      */
     [[nodiscard]] size_type index(const entity_type entt) const noexcept {
-        ENTT_ASSERT(contains(entt), "Set does not contain entity");
+		if(!contains(entt)){
+        	ENTT_ASSERT(contains(entt), "Set does not contain entity");
+		}
         return static_cast<size_type>(traits_type::to_entity(sparse_ref(entt)));
     }
 

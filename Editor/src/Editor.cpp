@@ -1,6 +1,6 @@
 #include <Engine.h>
 #include <Core/Main.h>
-
+#define lua_assert(x) std::cout << x << std::endl
 #include "EditorLayer.h"
 namespace Engine{
 	class Editor : public App {

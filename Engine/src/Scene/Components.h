@@ -1,11 +1,14 @@
 #pragma once
+#include <functional>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Core/Core.h"
+#include "Core/Log.h"
+#include "Core/UUID.h"
 #include "Renderer/Camera.h"
-#include "ScriptableObject.h"
 #include "Renderer/Texture.h"
 namespace Engine{
+	class ScriptableObject;
 	namespace Components{
 		struct Transform{
 			glm::vec3 pos;
@@ -13,7 +16,11 @@ namespace Engine{
 			float rot;
 
 			Transform() = default;
-			Transform(const Transform&) = default;
+			Transform(const Transform& t){
+				pos = t.pos;
+				rot = t.rot;
+				scale = t.scale;
+			}
 			Transform(glm::vec3 _pos, glm::vec2 _scale, float _rot){
 				pos = _pos;
 				scale = _scale;
@@ -41,7 +48,7 @@ namespace Engine{
 			}
 			void setMode(int _mode){
 				if(_mode == 1){
-					mode == Type::Tex;
+					mode = Type::Tex;
 				}else{
 					mode = Type::Color;
 				}
@@ -58,6 +65,7 @@ namespace Engine{
 		};
 		struct Tag{
 			std::string tag;
+			UUID uuid;
 			Tag() = default;
 			Tag(const Tag&) = default;
 			Tag(const std::string& _tag){
@@ -80,23 +88,36 @@ namespace Engine{
 				fixedAspect = false;
 			}
 		};
-		struct NativeScript{
+		struct API NativeScript{
 			bool enabled = true;
-			ScriptableObject* script = nullptr;
-			std::function<void()> instScript;
-			std::function<void()> destScript;
+			bool hasScript = false;
+			std::string path;
+			shdPtr<ScriptableObject> script = nullptr;
+			void (*make)(NativeScript*);
+			NativeScript() = default;
+			NativeScript(const NativeScript& n){
+				enabled = n.enabled;
+				hasScript = n.hasScript;
+				path = n.path;
+				script = n.script;
+				make = n.make;
+			}
+			~NativeScript(){
+				destroy();
+			}
 			template<typename T> void bind(){
-				instScript = [&](){
-					script = new T();
-				};
-				destScript = [&](){
-					delete script;
-					script = nullptr;
+				make = [](NativeScript* comp){
+					comp->script = std::make_shared<T>();
+					comp->script->path = comp->path;
+					comp->hasScript = true;
+					comp->script->compile();
 				};
 			}
-			void reset(){
-				enabled = true;
+			void destroy(){
+				script = nullptr;
+				hasScript = false;
 			}
+			void reset();
 		};
 	}
 }

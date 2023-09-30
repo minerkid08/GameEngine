@@ -1,6 +1,9 @@
 #include "SceneHierarchy.h"
+#include "Settings.h"
+#include "../lua/LuaScriptableObject.h"
 #include <filesystem>
 namespace Engine{
+	float SettingsPanel::scaleAllSizes = 2;
 	void SceneHierarchy::setContext(const shdPtr<Scene>& _scene){
 		scene = _scene;
 		selected = {};
@@ -38,7 +41,7 @@ namespace Engine{
 			}
 			ImVec2 contentArea = ImGui::GetContentRegionAvail();
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4,4));
-			float lineHeight = ImGui::GetFont()->FontSize * 2.0f + ImGui::GetStyle().FramePadding.y * 2.0f;
+			float lineHeight = ImGui::GetFont()->FontSize * SettingsPanel::scaleAllSizes + ImGui::GetStyle().FramePadding.y * 2.0f;
 			ImGui::PopStyleVar();
 
 			ImGui::SameLine(contentArea.x - lineHeight * 0.5f);
@@ -60,7 +63,7 @@ namespace Engine{
 				}
 				if(!selected.hasComp<Components::NativeScript>()){
 					if(ImGui::MenuItem("Script")){
-						selected.addComp<Components::NativeScript>();
+						selected.addComp<Components::NativeScript>().bind<LuaScriptableObject>();
 						ImGui::CloseCurrentPopup();
 					}
 				}
@@ -88,7 +91,7 @@ namespace Engine{
 				}
 			});
 			drawComp<Components::SpriteRenderer>("Sprite Renderer", flags, [this](Components::SpriteRenderer& renderer){
-				static int mode = 0;
+				int mode = (int)renderer.mode;
 				ImGui::Combo("mode", &mode, "color\0texture\0\0");
 				if(mode == 0){
 					renderer.mode = Components::SpriteRenderer::Type::Color;
@@ -98,7 +101,8 @@ namespace Engine{
 					char buf[256];
 					memset(buf, 0, sizeof(buf));
 					strcpy(buf, renderer.path.c_str());
-					ImGui::ImageButton((ImTextureID)renderer.tex->getId(), ImVec2(256, 256));
+					float buttonSize = ImGui::GetIO().FontGlobalScale * 150 + 16;
+					ImGui::ImageButton((ImTextureID)renderer.tex->getId(), ImVec2(buttonSize, buttonSize));
 					if(ImGui::BeginDragDropTarget()){
 						if(auto payload = ImGui::AcceptDragDropPayload("ContentBrowserItem")){
 							const wchar_t* data = (wchar_t*)payload->Data;
@@ -116,6 +120,21 @@ namespace Engine{
 			});
 			drawComp<Components::NativeScript>("Script", flags, [this](Components::NativeScript& script){
 				ImGui::Checkbox("enabled", &script.enabled);
+				char buf[256];
+				memset(buf, 0, sizeof(buf));
+				strcpy(buf, script.path.c_str());
+				float buttonSize = ImGui::GetIO().FontGlobalScale * 150 + 16;
+				ImGui::Button("script", ImVec2(buttonSize, buttonSize));
+				if(ImGui::BeginDragDropTarget()){
+					if(auto payload = ImGui::AcceptDragDropPayload("ContentBrowserItem")){
+						const wchar_t* data = (wchar_t*)payload->Data;
+						std::filesystem::path path = data;
+						if(path.extension() == ".lua"){
+							script.path = path.string();
+						}
+					}
+				}
+				ImGui::TextWrapped(script.path.c_str());
 			});
 		}
 		ImGui::End();
@@ -148,7 +167,7 @@ namespace Engine{
 		if(selected.hasComp<T>()){
 			ImVec2 contentArea = ImGui::GetContentRegionAvail();
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4,4));
-			float lineHeight = ImGui::GetFont()->FontSize * 2.0f + ImGui::GetStyle().FramePadding.y * 2.0f;
+			float lineHeight = ImGui::GetFont()->FontSize * SettingsPanel::scaleAllSizes + ImGui::GetStyle().FramePadding.y * 2.0f;
 			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), flags, name);
 			ImGui::PopStyleVar();
 

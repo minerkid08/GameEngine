@@ -1,15 +1,17 @@
 #include "EditorLayer.h"
-#include "Script.h"
 
 namespace Engine{
 	EditorLayer::EditorLayer() : Layer("e"), editorCamera(0.0f){}
 	void EditorLayer::attach(){
+		Log::callback = [](const std::string& s, int c){
+			const char* str = s.c_str();
+			Console::add(str, c);
+		};
 		scene = std::make_shared<Scene>();
 		contentBrowser.setMainPath("Assets");
 		explorer.setMainPath("Assets");
 
 		serializer.setEnt(scene);
-		scene->createEnt().addComp<Components::NativeScript>().bind<Script>();
 
 		sceneHierarchy.setContext(scene);
 
@@ -18,6 +20,7 @@ namespace Engine{
 		spec.width = 1280;
 		spec.height = 720;
 		frameBuffer = std::make_shared<FrameBuffer>(spec);
+		Console::add("inited", 1);
 	}
 	EditorLayer::~EditorLayer(){
 	}
@@ -28,10 +31,14 @@ namespace Engine{
 		frameBuffer->bind();
 
 		Renderer::clear();
-		if(mouseOnViewport){
-			editorCamera.update(deltaTime);
+		if(running){
+			runtimeScene->updateRuntime(deltaTime);
+		}else{
+			if(mouseOnViewport){
+				editorCamera.update(deltaTime);
+			}
+			scene->updateEditor(deltaTime, editorCamera.getCamera());
 		}
-		scene->updateEditor(deltaTime, editorCamera.getCamera());
 		
 		frameBuffer->unbind();
 	}
@@ -92,16 +99,25 @@ namespace Engine{
 					sceneHierarchy.setContext(scene);
 				}
 				if(ImGui::MenuItem("Save")){
-					if(!loading){
-						saving = true;
-						explorer.reset();
+					if(explorerMode == 0){
+						explorerMode = 1;
+						explorer.reset(FileExplorerFlags_MakeFile);
 					}
 				}
 				if(ImGui::MenuItem("Open")){
-					if(!saving){
-						loading = true;
-						explorer.reset();
+					if(explorerMode == 0){
+						explorerMode = 2;
+						explorer.reset(FileExplorerFlags_None);
 					}
+				}
+				if(ImGui::MenuItem("Set Project Dir")){
+					if(explorerMode == 0){
+						explorerMode = 3;
+						explorer.reset(FileExplorerFlags_DontShowFiles | FileExplorerFlags_AlwaysShowBack);
+					}
+				}
+				if(ImGui::MenuItem("Settings")){
+					showSettings = !showSettings;
 				}
 	            if(ImGui::MenuItem("Exit")){
 					App::getInstance().close();
@@ -134,27 +150,8 @@ namespace Engine{
 	            ImGui::EndMenu();
 	        }
 	        ImGui::EndMenuBar();
+			
 	    }
-		if(saving){
-			if(int i = explorer.render(".scene", true)){
-				if(i == 1){
-					serializer.seralize(explorer.outPath.string());
-				}
-				saving = false;
-			}
-		}
-		if(loading){
-			if(int i = explorer.render(".scene", false)){
-				if(i == 1){
-					scene = std::make_shared<Scene>();
-					serializer.setEnt(scene);
-					sceneHierarchy.setContext(scene);
-					serializer.deseralize(explorer.outPath.string());
-				}
-				loading = false;
-			}
-		}
-		
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0,0});
 		ImGui::Begin("Viewport");
 		mouseOnViewport = (ImGui::IsWindowFocused() && ImGui::IsWindowHovered());
@@ -163,7 +160,7 @@ namespace Engine{
 		if(viewportSize != *((glm::vec2*)&viewportPanelSize)){
 			viewportSize = {ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y};
 			frameBuffer->resize((int)viewportSize.x, (int)viewportSize.y);
-			scene->viewportResize((int)viewportSize.x, (int)viewportSize.y, 1.0f);
+			scene->viewportResize((int)viewportSize.x, (int)viewportSize.y);
 			editorCamera.setAspect(viewportSize.x / viewportSize.y);
 		}
 		ImGui::Image((void*)frameBuffer->getColor(), ImVec2{viewportSize.x, viewportSize.y}, ImVec2{0,1}, ImVec2{1,0});
@@ -180,15 +177,80 @@ namespace Engine{
 		ImGui::PopStyleVar();
 		sceneHierarchy.uiRender();
 		contentBrowser.render();
+		console.draw();
+		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar);
+		if(!running){
+			if(ImGui::Button("|>")){
+				startRun();
+			}
+		}else{
+			if(ImGui::Button("||")){
+				stopRun();
+			}
+		}
+		ImGui::SameLine();
+		ImGui::MenuItem(("aspect: " + std::to_string((int)viewportSize.x) + " / " + std::to_string((int)viewportSize.y)).c_str());
+		ImGui::End();
+		if(showSettings){
+			settings.draw();
+		}
 	    ImGui::End();
+
+		switch(explorerMode){
+			case 0:
+				break;
+			case 1:
+				if(int i = explorer.render(".scene")){
+					if(i == 1){
+						serializer.seralize(explorer.outPath.string());
+					}
+					explorerMode = 0;
+				}
+				break;
+			case 2:
+				if(int i = explorer.render(".scene")){
+					if(i == 1){
+						scene = std::make_shared<Scene>();
+						serializer.setEnt(scene);
+						sceneHierarchy.setContext(scene);
+						serializer.deseralize(explorer.outPath.string());
+					}
+					explorerMode = 0;
+				}
+				break;
+			case 3:
+				if(int i = explorer.render("")){
+					if(i == 1){
+						std::string path = std::filesystem::absolute(explorer.outPath).string();
+						contentBrowser.setMainPath(path);
+						explorer.setMainPath(path);
+					}
+					explorerMode = 0;
+				}
+				break;
+		}
 	}
 	void EditorLayer::event(Event* e){
 		editorCamera.event(e);
 	}
 	void EditorLayer::openScene(const std::filesystem::path& path){
+		if(running){
+			stopRun();
+		}
 		scene = std::make_shared<Scene>();
 		serializer.setEnt(scene);
 		sceneHierarchy.setContext(scene);
 		serializer.deseralize(path.string());
+	}
+	void EditorLayer::startRun(){
+		running = true;
+		runtimeScene = scene->copy();
+		sceneHierarchy.setContext(runtimeScene);
+	}
+	void EditorLayer::stopRun(){
+		runtimeScene->stop();
+		running = false;
+		runtimeScene = nullptr;
+		sceneHierarchy.setContext(scene);
 	}
 }

@@ -1,7 +1,7 @@
 #include "Log.h"
 
 namespace Engine{
-	std::function<void(const std::string&, int)> Log::callback = [](const std::string& str, int i){
+	std::function<void(const char*, int)> Log::callback = [](const char* str, int i){
 		switch(i){
 			case 1:
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);

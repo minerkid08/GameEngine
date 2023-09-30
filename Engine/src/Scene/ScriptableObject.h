@@ -1,8 +1,10 @@
 #pragma once
 #include "Entity.h"
+#include "Core/Log.h"
 namespace Engine{
 	class ScriptableObject{
 		public:
+		std::string path;
 		operator bool() const {return (int)ent != 0;}
 		template<typename T, typename...Args> T& addComp(Args&&... args){
 			if(hasComp<T>()){
@@ -25,12 +27,15 @@ namespace Engine{
 			}
 			return ent.getComp<T>();
 		}
+		virtual void compile(){}
 		protected:
 		virtual void create(){}
 		virtual void destroy(){}
 		virtual void update(float deltaTime){}
+		bool state = false;
 		private:
 		friend class Scene;
 		Entity ent;
+		bool inited = false;
 	};
 }

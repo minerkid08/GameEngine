@@ -1,9 +1,11 @@
 #pragma once
 #include <Engine.h>
-#include "Scene/Seralizer.h"
+#include "Seralizer.h"
 #include "Panels/SceneHierarchy.h"
 #include "Panels/ContnentBrowser.h"
 #include "Panels/FileExplorer.h"
+#include "Panels/Console.h"
+#include "Panels/Settings.h"
 namespace Engine{
 	class EditorLayer : public Layer{
 		public:
@@ -14,23 +16,30 @@ namespace Engine{
 		void update(float deltaTime);
 		void imGuiRender();
 		void event(Event* e);
+		bool running = false;
 		private:
 		bool* open;
 		glm::vec2 viewportSize;
-		Transform transform;
 		shdPtr<FrameBuffer> frameBuffer;
 		shdPtr<Scene> scene;
+		shdPtr<Scene> runtimeScene;
 
 		Serializer serializer;
 		bool mouseOnViewport = false;
-		bool saving = false;
-		bool loading = false;
+		int explorerMode = 0;
+		bool showSettings = false;
+
 		CameraController editorCamera;
+
 		SceneHierarchy sceneHierarchy;
 		ContentBrowser contentBrowser;
-
+		Console console;
+		SettingsPanel settings;
 		FileExplorer explorer;
 
 		void openScene(const std::filesystem::path& path);
+
+		void startRun();
+		void stopRun();
 	};
 }

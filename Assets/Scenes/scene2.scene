@@ -2,19 +2,53 @@
     "Scene": "name",
     "entities": [
         {
+            "ScriptComp": {
+                "active": true,
+                "hasScript": true,
+                "path": "Assets\\Scripts\\test.lua"
+            },
             "SpriteComp": {
                 "color": [
                     1.0,
-                    0.0,
-                    0.0,
+                    1.0,
+                    1.0,
                     1.0
                 ],
-                "mode": 0,
-                "texPath": "",
+                "mode": 1,
+                "texPath": "Assets\\Textures\\tex.png",
                 "tile": 1.0
             },
             "TagComp": {
-                "Tag": "testEnt"
+                "Tag": "thing with no name",
+                "UUID": 1307281318
+            },
+            "TransformComp": {
+                "pos": [
+                    -0.350982666015625,
+                    0.3561859130859375,
+                    0.0
+                ],
+                "rot": 0.0,
+                "scale": [
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "CameraComp": {
+                "Camera": {
+                    "aspect": 2.124713182449341,
+                    "far": 1.0,
+                    "near": -1.0,
+                    "zoom": 3.0
+                },
+                "fixedAspect": false,
+                "mainCamera": true
+            },
+            "TagComp": {
+                "Tag": "thing with no name",
+                "UUID": 242108624
             },
             "TransformComp": {
                 "pos": [

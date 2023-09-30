@@ -1,6 +1,8 @@
 #pragma once
 #include "Scene.h"
+#include "Components.h"
 #include "Core/Log.h"
+#include "Core/UUID.h"
 #include <entt/ENTT.hpp>
 namespace Engine{
 	class Entity{
@@ -27,6 +29,7 @@ namespace Engine{
 				Log::Error("Ent already has comp");
 			}
 			T& comp = scene->registry.emplace<T>(ent, std::forward<Args>(args)...);
+			scene->addComp(*this);
 			return comp;
 		}
 		template<typename T> bool hasComp() const {
@@ -44,7 +47,9 @@ namespace Engine{
 			}
 			return scene->registry.get<T>(ent);
 		}
-
+		UUID getUUID(){
+			return getComp<Components::Tag>().uuid;
+		}
 		private:
 		entt::entity ent{entt::null};
 		Scene* scene;

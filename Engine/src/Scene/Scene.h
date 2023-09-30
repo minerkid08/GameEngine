@@ -3,19 +3,23 @@
 #include "Core/Core.h"
 #include "Renderer/Camera.h"
 namespace Engine{
-	class API Entity;
+	class Entity;
 	class API Scene{
 		public:
 		Scene();
 		~Scene();
 		void updateRuntime(float deltaTime);
 		void updateEditor(float deltaTime, Camera& camera);
-		void viewportResize(int width, int height, float zoom);
+		void viewportResize(int width, int height);
 
 		Entity createEnt(const std::string& name = "thing with no name");
 		void removeEnt(const Entity& ent);
 
-		void clear();
+		void stop();
+
+		void addComp(Entity& ent);
+
+		shdPtr<Scene> copy();
 
 		entt::registry& getReg(){return registry;}
 		private:

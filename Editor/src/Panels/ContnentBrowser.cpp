@@ -15,6 +15,7 @@ namespace Engine{
 				curPath = curPath.parent_path();
 			}
 		}
+		buttonSize = ImGui::GetIO().FontGlobalScale * 150;
 		float cellSize = buttonSize + padding;
 		float panelWidth = ImGui::GetContentRegionAvail().x;
 		int columCount = (int)(panelWidth / cellSize);
@@ -32,8 +33,7 @@ namespace Engine{
 					curPath /= name;
 				}
 			}else{
-				if(ImGui::Button("file.png", ImVec2(buttonSize, buttonSize))){
-				}
+				ImGui::Button("file.png", ImVec2(buttonSize, buttonSize));
 				if(ImGui::BeginDragDropSource()){
 					const wchar_t* data = p.path().c_str();
 					ImGui::SetDragDropPayload("ContentBrowserItem", data, (wcslen(data) + 1) * sizeof(wchar_t), ImGuiCond_Once);
