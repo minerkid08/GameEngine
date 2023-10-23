@@ -9,6 +9,8 @@ namespace Engine{
 		template<typename T, typename...Args> T& addComp(Args&&... args){
 			if(hasComp<T>()){
 				Log::Error("Ent already has comp");
+				T obj = {};
+				return obj;
 			}
 			return ent.addComp<T>(std::forward<Args>(args)...);
 		}
@@ -18,12 +20,15 @@ namespace Engine{
 		template<typename T> void removeComp(){
 			if(!hasComp<T>()){
 				Log::Error("Ent doesnt have comp");
+				return;
 			}
 			return ent.removeComp<T>();
 		}
 		template<typename T> T& getComp(){
 			if(!hasComp<T>()){
 				Log::Error("Ent doesnt have comp");
+				T obj = {};
+				return obj;
 			}
 			return ent.getComp<T>();
 		}
@@ -33,9 +38,9 @@ namespace Engine{
 		virtual void destroy(){}
 		virtual void update(float deltaTime){}
 		bool state = false;
+		Entity ent;
 		private:
 		friend class Scene;
-		Entity ent;
 		bool inited = false;
 	};
 }

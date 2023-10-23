@@ -6,13 +6,13 @@ namespace Engine{
 		json out;
 		out["Scene"] = "name";
 		out["entities"] = {};
-		scene->getReg().each([&](entt::entity id){
-			Entity ent = {scene.get(), id};
+		for(int i = 0; i < scene->entities.size(); i++){
+			Entity& ent = scene->entities[i];
 			if(!ent){
-				return;
+				continue;;
 			}
 			seralizeEnt(out, ent);
-		});
+		};
 		std::ofstream fout(path);
 		fout << out.dump(4);
 	}

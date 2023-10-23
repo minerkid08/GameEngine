@@ -1,0 +1,154 @@
+{
+    "Scene": "name",
+    "entities": [
+        {
+            "CameraComp": {
+                "Camera": {
+                    "aspect": 1.865021824836731,
+                    "far": 1.0,
+                    "near": -1.0,
+                    "zoom": 1.0
+                },
+                "fixedAspect": false,
+                "mainCamera": true
+            },
+            "TagComp": {
+                "Tag": "thing with no name",
+                "UUID": 569382679
+            },
+            "TransformComp": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rot": 0.0,
+                "scale": [
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "SpriteComp": {
+                "color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "mode": 1,
+                "texPath": "Assets\\Textures\\tex.png",
+                "tile": 1.0
+            },
+            "TagComp": {
+                "Tag": "bg",
+                "UUID": -85684426
+            },
+            "TransformComp": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rot": 0.0,
+                "scale": [
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "SpriteComp": {
+                "color": [
+                    1.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "mode": 0,
+                "texPath": "",
+                "tile": 1.0
+            },
+            "TagComp": {
+                "Tag": "dest",
+                "UUID": 259618178
+            },
+            "TransformComp": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rot": 0.0,
+                "scale": [
+                    0.10000000149011612,
+                    0.10000000149011612
+                ]
+            }
+        },
+        {
+            "SpriteComp": {
+                "color": [
+                    0.0,
+                    1.0,
+                    0.0,
+                    1.0
+                ],
+                "mode": 0,
+                "texPath": "",
+                "tile": 1.0
+            },
+            "TagComp": {
+                "Tag": "src",
+                "UUID": -845076995
+            },
+            "TransformComp": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rot": 0.0,
+                "scale": [
+                    0.10000000149011612,
+                    0.10000000149011612
+                ]
+            }
+        },
+        {
+            "ScriptComp": {
+                "active": true,
+                "hasScript": false,
+                "path": "Assets\\Scripts\\game.lua"
+            },
+            "SpriteComp": {
+                "color": [
+                    0.0,
+                    0.0,
+                    1.0,
+                    1.0
+                ],
+                "mode": 0,
+                "texPath": "",
+                "tile": 1.0
+            },
+            "TagComp": {
+                "Tag": "object",
+                "UUID": -1527633478
+            },
+            "TransformComp": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rot": 0.0,
+                "scale": [
+                    0.10000000149011612,
+                    0.10000000149011612
+                ]
+            }
+        }
+    ]
+}

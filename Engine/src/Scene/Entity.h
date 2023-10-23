@@ -27,6 +27,8 @@ namespace Engine{
 		template<typename T, typename...Args> T& addComp(Args&&... args){
 			if(hasComp<T>()){
 				Log::Error("Ent already has comp");
+				T obj = {};
+				return obj;
 			}
 			T& comp = scene->registry.emplace<T>(ent, std::forward<Args>(args)...);
 			scene->addComp(*this);
@@ -38,17 +40,23 @@ namespace Engine{
 		template<typename T> void removeComp(){
 			if(!hasComp<T>()){
 				Log::Error("Ent doesnt have comp");
+				return;
 			}
 			scene->registry.remove<T>(ent);
 		}
 		template<typename T> T& getComp() const {
 			if(!hasComp<T>()){
 				Log::Error("Ent doesnt have comp");
+				T obj = {};
+				return obj;
 			}
 			return scene->registry.get<T>(ent);
 		}
 		UUID getUUID(){
 			return getComp<Components::Tag>().uuid;
+		}
+		Scene* getScene(){
+			return scene;
 		}
 		private:
 		entt::entity ent{entt::null};

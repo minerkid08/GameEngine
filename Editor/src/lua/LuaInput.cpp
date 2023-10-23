@@ -9,7 +9,7 @@ namespace Engine{
 		lua_setglobal(l, "input");
 
 		lua_pushcfunction(l, mouseButtonDown);
-		lua_setfield(l, -2, "mouseButtonDown");
+		lua_setfield(l, -2, "mouseDown");
 		
 		lua_pushcfunction(l, mouseX);
 		lua_setfield(l, -2, "mouseX");

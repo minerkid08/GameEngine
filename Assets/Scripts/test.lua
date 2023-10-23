@@ -2,12 +2,19 @@ moveState = 0;
 scaleXState = 0;
 scaleYState = 0;
 transform = nil;
+ent = nil;
 
 function create()
-	transform = getComp("transform");
+	ent = Entity:getWithName("box");
+	transform = ent:getComp("transform");
 	transform.scale:setX(0.5);
+
+	tag = ent:getComp("tag");
+	info(tag:getTag());
+	tag:setTag("box2");
 end
 function update(deltaTime)
+	if(input.mouseDown(3)) then return end
 	local x = transform.pos:getX();
 	local y = transform.pos:getY();
 	local r = transform:getRot();

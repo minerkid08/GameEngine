@@ -59,6 +59,32 @@ namespace Engine{
 		}
 		Renderer2D::endScene();
 	}
+	void Scene::updateEditor(float deltaTime){
+		bool drawing = false;
+		auto cameraGroup = registry.group<Components::Camera>(entt::get<Components::Transform>);
+		for(auto ent : cameraGroup){
+			auto [camera, transform] = cameraGroup.get<Components::Camera, Components::Transform>(ent);
+			if(camera.mainCamera){
+				camera.camera.setPos(transform.pos);
+				camera.camera.setRot(transform.rot);
+				Renderer2D::beginScene(camera.camera);
+				drawing = true;
+			}
+		};
+		if(!drawing){return;}
+		auto group = registry.group<Components::SpriteRenderer>(entt::get<Components::Transform>);
+		for(auto ent : group){
+			if(Entity(this, ent)){
+				auto [transform, sprite] = group.get<Components::Transform, Components::SpriteRenderer>(ent);
+				if(sprite.mode == Components::SpriteRenderer::Type::Color){
+					Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.color);
+				}else{
+					Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.tex, sprite.color, sprite.tile);
+				}
+			}
+		}
+		Renderer2D::endScene();
+	}
 	void Scene::updateEditor(float deltaTime, Camera& camera){
 		Renderer2D::beginScene(camera);
 		auto group = registry.group<Components::Transform>(entt::get<Components::SpriteRenderer>);
@@ -72,14 +98,52 @@ namespace Engine{
 		}
 		Renderer2D::endScene();
 	}
+	
 	Entity Scene::createEnt(const std::string& name){
 		Entity ent = {this, registry.create()};
 		ent.addComp<Components::Transform>();
 		ent.addComp<Components::Tag>(name);
+		entities.push_back(ent);
 		return ent;
 	}
+
 	void Scene::removeEnt(const Entity& ent){
 		registry.destroy(ent);
+		bool found = false;
+		for(int i = 0; i < entities.size(); i++){
+			if(ent == entities[i]){
+				found = true;
+			}
+			if(found && entities.size() > i + 1){
+				entities[i] = entities[i+1];
+			}
+		}
+		entities.resize(entities.size() - 1);
+	}
+
+	void Scene::moveEnt(const Entity& ent, int mod){
+		bool found = false;
+		for(int i = 0; i < entities.size(); i++){
+			if(ent == entities[i]){
+				if(i + mod >= entities.size() || i + mod < 0){
+					return;
+				}
+				entities[i] = entities[i + mod];
+				entities[i + mod] = ent;
+				return;
+			}
+		}
+	}
+
+	Entity Scene::getEntityByName(const std::string& name){
+		auto group = registry.view<Components::Transform>();
+		for(auto ent : group){
+			Components::Tag& tag = registry.get<Components::Tag>(ent);
+			if(tag.tag == name){
+				return {this, ent};
+			}
+		}
+		return {};
 	}
 	void Scene::viewportResize(int _width, int _height){
 		width = _width;
@@ -117,10 +181,9 @@ namespace Engine{
 
 		std::unordered_map<UUID, entt::entity> map;
 
-		auto group = registry.view<Components::Transform>();
-		for(auto ent : group){
-			UUID uuid = registry.get<Components::Tag>(ent).uuid;
-			const std::string& name = registry.get<Components::Tag>(ent).tag;
+		for(int i = 0; i < entities.size(); i++){
+			UUID uuid = registry.get<Components::Tag>(entities[i]).uuid;
+			const std::string& name = registry.get<Components::Tag>(entities[i]).tag;
 			Entity newEnt = s->createEnt(name);
 			newEnt.getComp<Components::Tag>().uuid = uuid;
 			map[uuid] = newEnt;

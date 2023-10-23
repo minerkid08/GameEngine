@@ -34,10 +34,14 @@ namespace Engine{
 		if(running){
 			runtimeScene->updateRuntime(deltaTime);
 		}else{
-			if(mouseOnViewport){
-				editorCamera.update(deltaTime);
+			if(sceneHierarchy.getDrawCamera()){
+				scene->updateEditor(deltaTime);
+			}else{
+				if(mouseOnViewport){
+					editorCamera.update(deltaTime);
+				}
+				scene->updateEditor(deltaTime, editorCamera.getCamera());
 			}
-			scene->updateEditor(deltaTime, editorCamera.getCamera());
 		}
 		
 		frameBuffer->unbind();
@@ -157,11 +161,16 @@ namespace Engine{
 		mouseOnViewport = (ImGui::IsWindowFocused() && ImGui::IsWindowHovered());
 		App::getInstance().getUiLayer()->setBlockEvents(!mouseOnViewport);
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		if(viewportSize != *((glm::vec2*)&viewportPanelSize)){
-			viewportSize = {ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y};
+		glm::vec2 glmSize = {viewportPanelSize.x, viewportPanelSize.y};
+		if(viewportSize != glmSize){
+			viewportSize = glmSize;
 			frameBuffer->resize((int)viewportSize.x, (int)viewportSize.y);
-			scene->viewportResize((int)viewportSize.x, (int)viewportSize.y);
-			editorCamera.setAspect(viewportSize.x / viewportSize.y);
+			if(running){
+				runtimeScene->viewportResize((int)viewportSize.x, (int)viewportSize.y);
+			}else{
+				scene->viewportResize((int)viewportSize.x, (int)viewportSize.y);
+				editorCamera.setAspect(viewportSize.x / viewportSize.y);
+			}
 		}
 		ImGui::Image((void*)frameBuffer->getColor(), ImVec2{viewportSize.x, viewportSize.y}, ImVec2{0,1}, ImVec2{1,0});
 		if(ImGui::BeginDragDropTarget()){
@@ -246,11 +255,14 @@ namespace Engine{
 		running = true;
 		runtimeScene = scene->copy();
 		sceneHierarchy.setContext(runtimeScene);
+		runtimeScene->viewportResize((int)viewportSize.x, (int)viewportSize.y);
 	}
 	void EditorLayer::stopRun(){
 		runtimeScene->stop();
 		running = false;
 		runtimeScene = nullptr;
 		sceneHierarchy.setContext(scene);
+		scene->viewportResize((int)viewportSize.x, (int)viewportSize.y);
+		editorCamera.setAspect(viewportSize.x / viewportSize.y);
 	}
 }

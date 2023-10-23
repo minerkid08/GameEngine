@@ -66,6 +66,7 @@ namespace Engine{
 		struct Tag{
 			std::string tag;
 			UUID uuid;
+			int order;
 			Tag() = default;
 			Tag(const Tag&) = default;
 			Tag(const std::string& _tag){

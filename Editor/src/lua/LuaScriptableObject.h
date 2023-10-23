@@ -6,6 +6,8 @@
 #include "LuaTransform.h"
 #include "LuaInput.h"
 #include "LuaKeyCodes.h"
+#include "LuaEntity.h"
+#include "LuaVec2.h"
 namespace Engine{
 	class LuaScriptableObject : public ScriptableObject{
 		public:
@@ -20,11 +22,16 @@ namespace Engine{
 			lua_register(l, "info", info);
 			lua_register(l, "warn", warn);
 			lua_register(l, "error", error);
+
 			LuaInput::make(l);
 			LuaKeycode::make(l);
-			lua_register(l, "getComp", lGetComp);
-			lua_pushlightuserdata(l, this);
+			LuaEntity::make(l, &ent);
+			LuaVec2::make(l);
+
+			int entPos = LuaEntity::makeEnt(l, ent);
+			lua_pushvalue(l, entPos);
 			lua_setglobal(l, "entity");
+
 			state = checkState(luaL_dofile(l, path.c_str()));
 		}
 		~LuaScriptableObject(){
@@ -69,18 +76,6 @@ namespace Engine{
 					state = false;
 				}
 			}
-		}
-
-		static int lGetComp(lua_State* l){
-			const char* name = lua_tostring(l, 1);
-			lua_getglobal(l, "entity");
-			ScriptableObject* object = (ScriptableObject*)lua_touserdata(l, -1);
-			if(strcmp(name, "transform") == 0){
-				int pos = LuaTransform::make(l, object);
-				lua_pushvalue(l, pos);
-				return 1;
-			}
-			return 0;
 		}
 
 		static int info(lua_State* l){

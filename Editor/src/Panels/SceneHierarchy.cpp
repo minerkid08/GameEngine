@@ -10,12 +10,25 @@ namespace Engine{
 	}
 	void SceneHierarchy::uiRender(){
 		ImGui::Begin("Scene Hierarchy");
+		ImGui::Checkbox("draw from scene camera", &drawFromSceneCamera);
 		if(ImGui::Button("add entity")){
 			selected = scene->createEnt();
 		}
-		scene->getReg().each([this](entt::entity ent){
-			drawEntity({scene.get(), ent});
-		});
+		ImGui::SameLine();
+		if(ImGui::Button("^")){
+			if(selected){
+				scene->moveEnt(selected, -1);
+			}
+		}
+		ImGui::SameLine();
+		if(ImGui::Button("v")){
+			if(selected){
+				scene->moveEnt(selected, 1);
+			}
+		}
+		for(int i = 0; i < scene->entities.size(); i++){
+			drawEntity(scene->entities[i]);
+		};
 		if(ImGui::IsMouseDown(0) && ImGui::IsWindowHovered()){
 			selected = {};
 		}

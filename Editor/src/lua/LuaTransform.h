@@ -4,7 +4,7 @@
 namespace Engine{
 	class LuaTransform{
 		public:
-		static int make(lua_State* l, ScriptableObject* transform);
+		static int make(lua_State* l, const Entity& transform);
 		static int getPosX(lua_State* l);
 		static int setPosX(lua_State* l);
 		static int getPosY(lua_State* l);
