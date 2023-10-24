@@ -99,12 +99,12 @@ namespace Engine{
 		return 0;
 	}
 	int LuaTransform::getRot(lua_State* l){
-		lua_pushnumber(l, getTransform(l).rot);
-		return 1;
+		//lua_pushnumber(l, getTransform(l).rot);
+		//return 1;
 	}
 	int LuaTransform::setRot(lua_State* l){
-		getTransform(l).rot = lua_tonumber(l, 2);
-		return 0;
+		//getTransform(l).rot = lua_tonumber(l, 2);
+		//return 0;
 	}
 	int LuaTransform::getScaleX(lua_State* l){
 		lua_pushnumber(l, getTransform(l).scale.x);

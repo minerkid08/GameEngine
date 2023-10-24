@@ -34,10 +34,15 @@ namespace Engine{
 					transform.pos.y,
 					transform.pos.z
 				}},
-				{"rot", transform.rot},
+				{"rot", {
+					transform.rot.x,
+					transform.rot.y,
+					transform.rot.z
+				}},
 				{"scale", {
 					transform.scale.x,
-					transform.scale.y
+					transform.scale.y,
+					transform.scale.z
 				}}
 			};
 		}
@@ -105,12 +110,18 @@ namespace Engine{
 					ent["TransformComp"]["pos"][1],
 					ent["TransformComp"]["pos"][2]
 				};
-				glm::vec2 scale = {
+				glm::vec3 scale = {
 					ent["TransformComp"]["scale"][0],
-					ent["TransformComp"]["scale"][1]
+					ent["TransformComp"]["scale"][1],
+					ent["TransformComp"]["scale"][2]
+				};
+				glm::vec3 rot = {
+					ent["TransformComp"]["rot"][0],
+					ent["TransformComp"]["rot"][1],
+					ent["TransformComp"]["rot"][2]
 				};
 				comp.pos = pos;
-				comp.rot = ent["TransformComp"]["rot"];
+				comp.rot = rot;
 				comp.scale = scale;
 			}
 			if(ent.contains("CameraComp")){

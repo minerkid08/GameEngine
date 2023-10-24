@@ -84,10 +84,8 @@ namespace Engine{
 			}
 			drawComp<Components::Transform>("Transform", flags, [this](Components::Transform& transform){
 				ImGui::DragFloat3("pos", glm::value_ptr(transform.pos), 0.1f);
-				float rotation = glm::degrees(transform.rot);
-				ImGui::DragFloat("rot", &rotation, 5.0f);
-				transform.rot = glm::radians(rotation);
-				ImGui::DragFloat2("scale", glm::value_ptr(transform.scale), 0.1f);
+				ImGui::DragFloat3("rot", glm::value_ptr(transform.rot), 5.0f);
+				ImGui::DragFloat3("scale", glm::value_ptr(transform.scale), 0.1f);
 			}, false);
 			drawComp<Components::Camera>("Camera", flags, [this](Components::Camera& camera){
 				bool changed = false;

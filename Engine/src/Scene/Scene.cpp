@@ -89,7 +89,7 @@ namespace Engine{
 		Renderer2D::beginScene(camera);
 		auto group = registry.group<Components::Transform>(entt::get<Components::SpriteRenderer>);
 		for(auto ent : group){
-			auto [transform, sprite] = group.get<Components::Transform, Components::SpriteRenderer>(ent);
+			auto [transform, sprite] = registry.get<Components::Transform, Components::SpriteRenderer>(ent);
 			if(sprite.mode == Components::SpriteRenderer::Type::Color){
 				Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.color);
 			}else{

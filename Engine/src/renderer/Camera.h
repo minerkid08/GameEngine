@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#define GLM_ENABLE_EXPIRMENTAL
+#include <glm/gtx/quaternion.hpp>
 namespace Engine{
 	class Camera{
 		public:
@@ -15,14 +17,6 @@ namespace Engine{
 			viewMat = glm::mat4x4(1);
 			updateMat();
 		}
-		//void orthographic(float left, float right, float up, float down, float near_ = -1.0f, float far_ = 1.0f){
-		//	projMat = glm::ortho(left,right,down,up,near_,far_);
-		//	nearPlane = near_;
-		//	farPlane = far_;
-		//	mode = CameraMode::Orthographic;
-		//	viewMat = glm::mat4x4(1);
-		//	updateMat();
-		//}
 		void orthographic(int width, int height, float _zoom = 1, float near_ = -1.0f, float far_ = 1.0f){
 			nearPlane = near_;
 			farPlane = far_;
@@ -44,12 +38,12 @@ namespace Engine{
 			updateMat();
 		}
 		glm::vec3 getPos(){return pos;}
-		float getRot(){return rot;}
+		glm::vec3 getRot(){return rot;}
 		glm::mat4x4 getProjMat(){return projMat;}
 		glm::mat4x4 getViewMat(){return viewMat;}
 		const glm::mat4x4 getViewProjMat() const {return viewProjMat;}
 		void setPos(const glm::vec3& newPos){pos = newPos; updateMat();}
-		void setRot(const float newRot){rot = newRot; updateMat();}
+		void setRot(const glm::vec3& newRot){rot = newRot; updateMat();}
 		float& getNear(){return nearPlane;}
 		float& getFar(){return farPlane;}
 		float& getZoom(){return zoom;}
@@ -60,14 +54,14 @@ namespace Engine{
 		glm::mat4x4 viewMat = glm::mat4x4(1.0f);
 		glm::mat4x4 viewProjMat;
 		glm::vec3 pos = {0.0f, 0.0f, 0.0f};
+		glm::vec3 rot = {0.0f, 0.0f, 0.0f};
 		CameraMode mode;
 		float nearPlane = -1.0f;
 		float farPlane = 1.0f;
 		float aspect = 0;
 		float zoom = 1.0f;
-		float rot = 0.0f;
 		void updateMat(){
-			glm::mat4x4 transform = glm::translate(glm::mat4x4(1.0f), pos) * glm::rotate(glm::mat4x4(1.0f), glm::radians(rot), glm::vec3(0,0,1));
+			glm::mat4x4 transform = glm::translate(glm::mat4x4(1.0f), pos) * glm::toMat4(glm::quat(glm::vec3(glm::radians(rot.x), glm::radians(rot.y), glm::radians(rot.z))));
 			viewMat = glm::inverse(transform);
 			viewProjMat = viewMat * projMat;
 		}

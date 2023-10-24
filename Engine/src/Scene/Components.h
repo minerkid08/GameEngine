@@ -12,8 +12,8 @@ namespace Engine{
 	namespace Components{
 		struct Transform{
 			glm::vec3 pos;
-			glm::vec2 scale = {1.0f, 1.0f};
-			float rot;
+			glm::vec3 scale = {1.0f, 1.0f, 1.0f};
+			glm::vec3 rot = {0.0f, 0.0f, 0.0f};
 
 			Transform() = default;
 			Transform(const Transform& t){
@@ -21,15 +21,15 @@ namespace Engine{
 				rot = t.rot;
 				scale = t.scale;
 			}
-			Transform(glm::vec3 _pos, glm::vec2 _scale, float _rot){
+			Transform(glm::vec3 _pos, glm::vec3 _scale, glm::vec3 _rot){
 				pos = _pos;
 				scale = _scale;
 				rot = _rot;
 			}
 			void reset(){
 				pos = {0.0f, 0.0f, 0.0f};
-				rot = 0.0f;
-				scale = {1.0f, 1.0f};
+				rot = {0.0f, 0.0f, 0.0f};
+				scale = {1.0f, 1.0f, 1.0f};
 			}
 		};
 		struct SpriteRenderer{
