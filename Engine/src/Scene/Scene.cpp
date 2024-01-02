@@ -9,7 +9,6 @@ namespace Engine{
 		
 	}
 	Scene::~Scene(){
-
 	}
 	void Scene::addComp(Entity& ent){
 		if(ent.hasComp<Components::Camera>()){
@@ -25,19 +24,22 @@ namespace Engine{
 		for(auto& ent : scriptGroup){
 			auto& comp = scriptGroup.get<Components::NativeScript>(ent);
 			if(comp.enabled){
-				if(!comp.hasScript){
-					comp.make(&comp);
-					comp.script->ent = {this, ent};
-					comp.script->create();
+				if(comp.hasScript){
+					if(!comp.script->inited){
+						comp.script->ent = {this, ent};
+						comp.script->compile();
+						comp.script->create();
+					}
+					comp.script->update(deltaTime);
 				}
-				comp.script->update(deltaTime);
 			}
 		}
 
 		bool drawing = false;
-		auto cameraGroup = registry.group<Components::Camera>(entt::get<Components::Transform>);
+		auto cameraGroup = registry.group<Components::Camera>();
 		for(auto ent : cameraGroup){
-			auto [camera, transform] = cameraGroup.get<Components::Camera, Components::Transform>(ent);
+			auto camera = cameraGroup.get<Components::Camera>(ent);
+			auto transform = registry.get<Components::Transform>(ent);
 			if(camera.mainCamera){
 				camera.camera.setPos(transform.pos);
 				camera.camera.setRot(transform.rot);
@@ -46,10 +48,11 @@ namespace Engine{
 			}
 		};
 		if(!drawing){return;}
-		auto group = registry.group<Components::SpriteRenderer>(entt::get<Components::Transform>);
+		auto group = registry.group<Components::SpriteRenderer>();
 		for(auto ent : group){
 			if(Entity(this, ent)){
-				auto [transform, sprite] = group.get<Components::Transform, Components::SpriteRenderer>(ent);
+				auto sprite = group.get<Components::SpriteRenderer>(ent);
+				auto transform = registry.get<Components::Transform>(ent);
 				if(sprite.mode == Components::SpriteRenderer::Type::Color){
 					Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.color);
 				}else{
@@ -61,9 +64,10 @@ namespace Engine{
 	}
 	void Scene::updateEditor(float deltaTime){
 		bool drawing = false;
-		auto cameraGroup = registry.group<Components::Camera>(entt::get<Components::Transform>);
+		auto cameraGroup = registry.group<Components::Camera>();
 		for(auto ent : cameraGroup){
-			auto [camera, transform] = cameraGroup.get<Components::Camera, Components::Transform>(ent);
+			auto camera = cameraGroup.get<Components::Camera>(ent);
+			auto transform = registry.get<Components::Transform>(ent);
 			if(camera.mainCamera){
 				camera.camera.setPos(transform.pos);
 				camera.camera.setRot(transform.rot);
@@ -72,10 +76,11 @@ namespace Engine{
 			}
 		};
 		if(!drawing){return;}
-		auto group = registry.group<Components::SpriteRenderer>(entt::get<Components::Transform>);
+		auto group = registry.group<Components::SpriteRenderer>();
 		for(auto ent : group){
 			if(Entity(this, ent)){
-				auto [transform, sprite] = group.get<Components::Transform, Components::SpriteRenderer>(ent);
+				auto sprite = group.get<Components::SpriteRenderer>(ent);
+				auto transform = registry.get<Components::Transform>(ent);
 				if(sprite.mode == Components::SpriteRenderer::Type::Color){
 					Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.color);
 				}else{
@@ -87,9 +92,10 @@ namespace Engine{
 	}
 	void Scene::updateEditor(float deltaTime, Camera& camera){
 		Renderer2D::beginScene(camera);
-		auto group = registry.group<Components::Transform>(entt::get<Components::SpriteRenderer>);
+		auto group = registry.group<Components::SpriteRenderer>();
 		for(auto ent : group){
-			auto [transform, sprite] = group.get<Components::Transform, Components::SpriteRenderer>(ent);
+			auto sprite = group.get<Components::SpriteRenderer>(ent);
+			auto transform = registry.get<Components::Transform>(ent);
 			if(sprite.mode == Components::SpriteRenderer::Type::Color){
 				Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.color);
 			}else{

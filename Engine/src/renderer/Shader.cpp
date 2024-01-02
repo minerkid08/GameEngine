@@ -155,6 +155,7 @@ namespace Engine{
 		std::string name = shader->getName();
 		if(shaders.find(name) == shaders.end()){
 			Log::Error("Shader already in libary");
+			return;
 		}
 		shaders[shader->getName()] = shader;
 	}

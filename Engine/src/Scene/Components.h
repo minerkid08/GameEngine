@@ -7,6 +7,7 @@
 #include "Core/UUID.h"
 #include "Renderer/Camera.h"
 #include "Renderer/Texture.h"
+#include "Renderer/SubTex2D.h"
 namespace Engine{
 	class ScriptableObject;
 	namespace Components{
@@ -93,7 +94,7 @@ namespace Engine{
 			bool enabled = true;
 			bool hasScript = false;
 			std::string path;
-			shdPtr<ScriptableObject> script = nullptr;
+			shdPtr<ScriptableObject> script;
 			void (*make)(NativeScript*);
 			NativeScript() = default;
 			NativeScript(const NativeScript& n){
@@ -107,18 +108,25 @@ namespace Engine{
 				destroy();
 			}
 			template<typename T> void bind(){
-				make = [](NativeScript* comp){
-					comp->script = std::make_shared<T>();
-					comp->script->path = comp->path;
-					comp->hasScript = true;
-					comp->script->compile();
-				};
+				script = std::make_shared<T>();
+				script->path = path;
+				hasScript = true;
 			}
 			void destroy(){
 				script = nullptr;
 				hasScript = false;
 			}
 			void reset();
+		};
+		struct Tilemap{
+			int* tiles;
+			SubTex2D* textures;
+			int texCount;
+			int tileSize;
+			int gridSize;
+			Tilemap() = default;
+			Tilemap(const Tilemap&) = default;
+			~Tilemap() = default;
 		};
 	}
 }

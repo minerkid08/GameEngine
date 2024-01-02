@@ -1,0 +1,96 @@
+{
+    "Scene": "name",
+    "entities": [
+        {
+            "CameraComp": {
+                "Camera": {
+                    "aspect": 1.9380717277526855,
+                    "far": 1.0,
+                    "near": -1.0,
+                    "zoom": 1.0
+                },
+                "fixedAspect": false,
+                "mainCamera": true
+            },
+            "TagComp": {
+                "Tag": "thing with no name",
+                "UUID": 2078245427
+            },
+            "TransformComp": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rot": 0.0,
+                "scale": [
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ScriptComp": {
+                "active": true,
+                "hasScript": true,
+                "path": "Assets\\Scripts\\test3.lua"
+            },
+            "SpriteComp": {
+                "color": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "mode": 0,
+                "texPath": "",
+                "tile": 1.0
+            },
+            "TagComp": {
+                "Tag": "thing with no name",
+                "UUID": -735129666
+            },
+            "TransformComp": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rot": 0.0,
+                "scale": [
+                    0.25,
+                    0.25
+                ]
+            }
+        },
+        {
+            "SpriteComp": {
+                "color": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "mode": 0,
+                "texPath": "",
+                "tile": 1.0
+            },
+            "TagComp": {
+                "Tag": "ent2",
+                "UUID": -333423953
+            },
+            "TransformComp": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rot": 0.0,
+                "scale": [
+                    0.125,
+                    0.125
+                ]
+            }
+        }
+    ]
+}

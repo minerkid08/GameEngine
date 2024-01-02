@@ -1795,6 +1795,7 @@ private:
 #include <tuple>
 #include <type_traits>
 #include <utility>
+#include <iostream>
 // #include "../config/config.h"
 
 
@@ -1832,6 +1833,10 @@ namespace entt {
  * @return The common remainder.
  */
 [[nodiscard]] inline constexpr std::size_t fast_mod(const std::size_t value, const std::size_t mod) noexcept {
+	if(!is_power_of_two(mod)){
+		std::cout << ":(";
+		return value % mod;
+	}
     ENTT_ASSERT_CONSTEXPR(is_power_of_two(mod), "Value must be a power of two");
     return value & (mod - 1u);
 }
@@ -16403,8 +16408,7 @@ public:
         const auto elem = sparse_ptr(entt);
         constexpr auto cap = traits_type::to_entity(null);
         // testing versions permits to avoid accessing the packed array
-        int i = elem && (((~cap & traits_type::to_integral(entt)) ^ traits_type::to_integral(*elem)) < cap);
-		return i;
+        return elem && (((~cap & traits_type::to_integral(entt)) ^ traits_type::to_integral(*elem)) < cap);
     }
 
     /**
@@ -16430,9 +16434,7 @@ public:
      * @return The position of the entity in the sparse set.
      */
     [[nodiscard]] size_type index(const entity_type entt) const noexcept {
-		if(!contains(entt)){
-        	ENTT_ASSERT(contains(entt), "Set does not contain entity");
-		}
+        ENTT_ASSERT(contains(entt), "Set does not contain entity");
         return static_cast<size_type>(traits_type::to_entity(sparse_ref(entt)));
     }
 

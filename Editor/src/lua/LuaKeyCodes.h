@@ -13,7 +13,7 @@ namespace Engine{
 			lua_newtable(l);
 			int tablepos = lua_gettop(l);
 			lua_pushvalue(l, tablepos);
-			lua_setglobal(l, "keycodes");
+			lua_setglobal(l, "Keycodes");
 
 			addkeycode(l, "space",              32);
 			addkeycode(l, "apostrophe",         39);  /* ' */

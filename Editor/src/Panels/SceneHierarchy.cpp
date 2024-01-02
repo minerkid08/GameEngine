@@ -76,7 +76,7 @@ namespace Engine{
 				}
 				if(!selected.hasComp<Components::NativeScript>()){
 					if(ImGui::MenuItem("Script")){
-						selected.addComp<Components::NativeScript>().bind<LuaScriptableObject>();
+						selected.addComp<Components::NativeScript>();
 						ImGui::CloseCurrentPopup();
 					}
 				}
@@ -144,6 +144,7 @@ namespace Engine{
 						std::filesystem::path path = data;
 						if(path.extension() == ".lua"){
 							script.path = path.string();
+							script.bind<LuaScriptableObject>();
 						}
 					}
 				}

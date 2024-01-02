@@ -6,7 +6,7 @@ namespace Engine{
 		lua_newtable(l);
 		int pos = lua_gettop(l);
 		lua_pushvalue(l, pos);
-		lua_setglobal(l, "input");
+		lua_setglobal(l, "Input");
 
 		lua_pushcfunction(l, mouseButtonDown);
 		lua_setfield(l, -2, "mouseDown");

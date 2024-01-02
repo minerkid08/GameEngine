@@ -12,11 +12,6 @@ namespace Engine{
 	class LuaScriptableObject : public ScriptableObject{
 		public:
 		void compile(){
-			if(l){
-				lua_close(l);
-				l = nullptr;
-				state = false;
-			}
 			l = luaL_newstate();
 			luaL_openlibs(l);
 			lua_register(l, "info", info);
@@ -27,19 +22,19 @@ namespace Engine{
 			LuaKeycode::make(l);
 			LuaEntity::make(l, &ent);
 			LuaVec2::make(l);
+			LuaTransform::make(l, ent);
+			lua_setglobal(l, "transform");
 
 			int entPos = LuaEntity::makeEnt(l, ent);
 			lua_pushvalue(l, entPos);
 			lua_setglobal(l, "entity");
 
 			state = checkState(luaL_dofile(l, path.c_str()));
+			inited = true;
 		}
 		~LuaScriptableObject(){
-			if(l){
-				lua_close(l);
-				l = nullptr;
-				state = false;
-			}
+			lua_close(l);
+			state = false;
 		}
 		void create(){
 			if(state){
@@ -66,16 +61,12 @@ namespace Engine{
 			if(state){
 				lua_getglobal(l, "destroy");
 				if(lua_isfunction(l, -1)){
-					if(checkState(lua_pcall(l, 0, 0, 0))){
-						return;
-					}
-				}
-				if(l){
-					lua_close(l);
-					l = nullptr;
-					state = false;
+					checkState(lua_pcall(l, 0, 0, 0));
 				}
 			}
+			lua_close(l);
+			state = false;
+			inited = false;
 		}
 
 		static int info(lua_State* l){
@@ -101,9 +92,11 @@ namespace Engine{
 		}
 		private:
 		lua_State* l = nullptr;
+		int updatePos;
 		bool checkState(int r){
 			if(r != LUA_OK){
 				Console::add(lua_tostring(l, -1), 3);
+				state = false;
 				return false;
 			}
 			return true;

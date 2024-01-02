@@ -187,7 +187,9 @@ namespace Engine{
 		sceneHierarchy.uiRender();
 		contentBrowser.render();
 		console.draw();
-		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 1.5 * SettingsPanel::scaleAllSizes));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 		if(!running){
 			if(ImGui::Button("|>")){
 				startRun();
@@ -200,6 +202,7 @@ namespace Engine{
 		ImGui::SameLine();
 		ImGui::MenuItem(("aspect: " + std::to_string((int)viewportSize.x) + " / " + std::to_string((int)viewportSize.y)).c_str());
 		ImGui::End();
+		ImGui::PopStyleVar(2);
 		if(showSettings){
 			settings.draw();
 		}

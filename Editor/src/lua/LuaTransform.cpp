@@ -1,65 +1,26 @@
 #include "LuaTransform.h"
 namespace Engine{
 	int LuaTransform::make(lua_State* l, const Entity& ent){
-		//pos table 
-		lua_newtable(l);
-		int posPos = lua_gettop(l);
-
-		lua_pushcfunction(l, getPosX);
-		lua_setfield(l, -2, "getX");
-
-		lua_pushcfunction(l, getPosY);
-		lua_setfield(l, -2, "getY");
-
-		lua_pushcfunction(l, getPosZ);
-		lua_setfield(l, -2, "getZ");
-
-		lua_pushcfunction(l, setPosX);
-		lua_setfield(l, -2, "setX");
-
-		lua_pushcfunction(l, setPosY);
-		lua_setfield(l, -2, "setY");
-
-		lua_pushcfunction(l, setPosZ);
-		lua_setfield(l, -2, "setZ");
-
-		lua_pushlightuserdata(l, (void*)(entt::entity)ent);
-		lua_setfield(l, -2, "id");
-
-		//scale table
-		lua_newtable(l);
-		int scalePos = lua_gettop(l);
-
-		lua_pushcfunction(l, getScaleX);
-		lua_setfield(l, -2, "getX");
-
-		lua_pushcfunction(l, getScaleY);
-		lua_setfield(l, -2, "getY");
-
-		lua_pushcfunction(l, setScaleX);
-		lua_setfield(l, -2, "setX");
-
-		lua_pushcfunction(l, setScaleY);
-		lua_setfield(l, -2, "setY");
-
-		lua_pushlightuserdata(l, (void*)(entt::entity)ent);
-		lua_setfield(l, -2, "id");
-
-		//transform table
 		lua_newtable(l);
 		int transformPos = lua_gettop(l);
 
-		lua_pushvalue(l, posPos);
-		lua_setfield(l, transformPos, "pos");
+		lua_pushcfunction(l, getPos);
+		lua_setfield(l, -2, "getPos");
 
-		lua_pushvalue(l, scalePos);
-		lua_setfield(l, transformPos, "scale");
+		lua_pushcfunction(l, setPos);
+		lua_setfield(l, -2, "setPos");
 
 		lua_pushcfunction(l, getRot);
 		lua_setfield(l, -2, "getRot");
 
 		lua_pushcfunction(l, setRot);
 		lua_setfield(l, -2, "setRot");
+
+		lua_pushcfunction(l, getScale);
+		lua_setfield(l, -2, "getScale");
+
+		lua_pushcfunction(l, setScale);
+		lua_setfield(l, -2, "setScale");
 
 		lua_pushlightuserdata(l, (void*)(entt::entity)ent);
 		lua_setfield(l, -2, "id");
@@ -74,29 +35,26 @@ namespace Engine{
 		int id = (uint64_t)lua_touserdata(l, -1);
 		return Entity(ent->getScene(), (entt::entity)id).getComp<Components::Transform>();
 	}
-	int LuaTransform::getPosX(lua_State* l){
-		lua_pushnumber(l, getTransform(l).pos.x);
-		return 1;
-	}
-	int LuaTransform::getPosY(lua_State* l){
-		lua_pushnumber(l, getTransform(l).pos.y);
-		return 1;
-	}
-	int LuaTransform::getPosZ(lua_State* l){
-		lua_pushnumber(l, getTransform(l).pos.z);
-		return 1;
-	}
-	int LuaTransform::setPosX(lua_State* l){
-		getTransform(l).pos.x = lua_tonumber(l, 2);
+	int LuaTransform::setPos(lua_State* l){
+		lua_getfield(l, 2, "x");
+		float x = lua_tonumber(l, -1);
+		lua_getfield(l, 2, "y");
+		float y = lua_tonumber(l, -1);
+		lua_getfield(l, 2, "z");
+		float z = lua_tonumber(l, -1);
+		getTransform(l).pos = {x, y, z};
 		return 0;
 	}
-	int LuaTransform::setPosY(lua_State* l){
-		getTransform(l).pos.y = lua_tonumber(l, 2);
-		return 0;
-	}
-	int LuaTransform::setPosZ(lua_State* l){
-		getTransform(l).pos.z = lua_tonumber(l, 2);
-		return 0;
+	int LuaTransform::getPos(lua_State* l){
+		Components::Transform& transform = getTransform(l);
+		lua_newtable(l);
+		lua_pushnumber(l, transform.pos.x);
+		lua_setfield(l, -2, "x");
+		lua_pushnumber(l, transform.pos.y);
+		lua_setfield(l, -2, "y");
+		lua_pushnumber(l, transform.pos.z);
+		lua_setfield(l, -2, "z");
+		return 1;
 	}
 	int LuaTransform::getRot(lua_State* l){
 		lua_pushnumber(l, getTransform(l).rot);
@@ -106,20 +64,21 @@ namespace Engine{
 		getTransform(l).rot = lua_tonumber(l, 2);
 		return 0;
 	}
-	int LuaTransform::getScaleX(lua_State* l){
-		lua_pushnumber(l, getTransform(l).scale.x);
-		return 1;
-	}
-	int LuaTransform::setScaleX(lua_State* l){
-		getTransform(l).scale.x = lua_tonumber(l, 2);
+	int LuaTransform::setScale(lua_State* l){
+		lua_getfield(l, 2, "x");
+		float x = lua_tonumber(l, -1);
+		lua_getfield(l, 2, "y");
+		float y = lua_tonumber(l, -1);
+		getTransform(l).scale = {x, y};
 		return 0;
 	}
-	int LuaTransform::getScaleY(lua_State* l){
-		lua_pushnumber(l, getTransform(l).scale.y);
+	int LuaTransform::getScale(lua_State* l){
+		Components::Transform& transform = getTransform(l);
+		lua_newtable(l);
+		lua_pushnumber(l, transform.scale.x);
+		lua_setfield(l, -2, "x");
+		lua_pushnumber(l, transform.scale.y);
+		lua_setfield(l, -2, "y");
 		return 1;
-	}
-	int LuaTransform::setScaleY(lua_State* l){
-		getTransform(l).scale.y = lua_tonumber(l, 2);
-		return 0;
 	}
 }

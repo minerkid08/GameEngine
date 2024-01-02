@@ -33,14 +33,11 @@ namespace Engine{
 			return ent.getComp<T>();
 		}
 		virtual void compile(){}
-		protected:
 		virtual void create(){}
 		virtual void destroy(){}
 		virtual void update(float deltaTime){}
 		bool state = false;
 		Entity ent;
-		private:
-		friend class Scene;
 		bool inited = false;
 	};
 }

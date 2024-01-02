@@ -1,5 +1,6 @@
 #include "LuaEntity.h"
 #include "LuaTransform.h"
+#include "LuaSpriteRenderer.h"
 #include "LuaTag.h"
 namespace Engine{
 	void LuaEntity::make(lua_State* l, Entity* ent){
@@ -92,6 +93,10 @@ namespace Engine{
 			LuaTransform::make(l, e);
 			return 1;
 		}
+		if(strcmp(name, "spriteRenderer") == 0){
+			LuaSpriteRenderer::make(l, e);
+			return 1;
+		}
 		if(strcmp(name, "tag") == 0){
 			LuaTag::make(l, e);
 			return 1;
@@ -108,6 +113,11 @@ namespace Engine{
 			LuaTransform::make(l, e);
 			return 1;
 		}
+		if(strcmp(name, "spriteRenderer") == 0){
+			e.addComp<Components::SpriteRenderer>();
+			LuaSpriteRenderer::make(l, e);
+			return 1;
+		}
 		return 0;
 	}
 	int LuaEntity::hasComp(lua_State* l){
@@ -117,6 +127,10 @@ namespace Engine{
 
 		if(strcmp(name, "transform") == 0){
 			lua_pushboolean(l, e.hasComp<Components::Transform>());
+			return 1;
+		}
+		if(strcmp(name, "spriteRenderer") == 0){
+			lua_pushboolean(l, e.hasComp<Components::SpriteRenderer>());
 			return 1;
 		}
 		if(strcmp(name, "tag") == 0){
@@ -132,6 +146,10 @@ namespace Engine{
 
 		if(strcmp(name, "transform") == 0){
 			e.removeComp<Components::Transform>();
+			return 0;
+		}
+		if(strcmp(name, "spriteRenderer") == 0){
+			e.removeComp<Components::SpriteRenderer>();
 			return 0;
 		}
 		return 0;
