@@ -20,6 +20,9 @@ namespace Engine{
 		spec.width = 1280;
 		spec.height = 720;
 		frameBuffer = std::make_shared<FrameBuffer>(spec);
+
+		assetManager->loadAssetsFolder("Assets");
+
 		Console::add("inited", 1);
 	}
 	EditorLayer::~EditorLayer(){
@@ -185,7 +188,7 @@ namespace Engine{
 		ImGui::End();
 		ImGui::PopStyleVar();
 		sceneHierarchy.uiRender();
-		contentBrowser.render();
+		contentBrowser.render(assetManager);
 		console.draw();
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 1.5 * SettingsPanel::scaleAllSizes));
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));

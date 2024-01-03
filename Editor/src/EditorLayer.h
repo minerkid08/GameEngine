@@ -1,6 +1,7 @@
 #pragma once
 #include <Engine.h>
 #include "Seralizer.h"
+#include "AssetManager.h"
 #include "Panels/SceneHierarchy.h"
 #include "Panels/ContnentBrowser.h"
 #include "Panels/FileExplorer.h"
@@ -23,6 +24,7 @@ namespace Engine{
 		shdPtr<FrameBuffer> frameBuffer;
 		shdPtr<Scene> scene;
 		shdPtr<Scene> runtimeScene;
+		shdPtr<AssetManager> assetManager;
 
 		Serializer serializer;
 		bool mouseOnViewport = false;

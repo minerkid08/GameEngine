@@ -7,7 +7,7 @@ namespace Engine{
 		mainPath = path;
 		curPath = path;
 	}
-	void ContentBrowser::render(){
+	void ContentBrowser::render(const shdPtr<AssetManager>& assetManager){
 		ImGui::Begin("Content Browser");
 		ImGui::Text(curPath.string().c_str());
 		if(curPath != mainPath){
@@ -33,7 +33,10 @@ namespace Engine{
 					curPath /= name;
 				}
 			}else{
-				ImGui::Button("file.png", ImVec2(buttonSize, buttonSize));
+				if(ImGui::Button("file.png", ImVec2(buttonSize, buttonSize))){
+					ImGui::OpenPopup("CBCtxMenu");
+					ctxMenuPath = p.path();
+				}
 				if(ImGui::BeginDragDropSource()){
 					const wchar_t* data = p.path().c_str();
 					ImGui::SetDragDropPayload("ContentBrowserItem", data, (wcslen(data) + 1) * sizeof(wchar_t), ImGuiCond_Once);
@@ -45,5 +48,14 @@ namespace Engine{
 			ImGui::PopID();
 		}
 		ImGui::End();
+		if(ImGui::BeginPopup("CBCtxMenu")){
+			if(ImGui::MenuItem("makeAsset")){
+				shdPtr<TextureAsset> asset = std::make_shared<TextureAsset>();
+				asset->create(ctxMenuPath);
+				asset->save();
+				assetManager->addTex(asset, asset->getId());
+			}
+			ImGui::EndPopup();
+		}
 	}
 }

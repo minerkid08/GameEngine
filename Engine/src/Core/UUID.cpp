@@ -8,6 +8,6 @@ namespace Engine{
 		id = dist(engine);
 	}
 	UUID::UUID(uint64_t _id){
-		id = dist(engine);
+		id = _id;
 	}
 }
