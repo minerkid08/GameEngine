@@ -113,6 +113,16 @@ namespace Engine{
 		drawInt(transform.getMat(), color, tex, tile);
 	}
 
+	void Renderer2D::draw(const Transform& transform, const shdPtr<Texture2D>& tex, float tile, glm::vec2* uvs){
+		drawInt(transform.getMat(), glm::vec4(1.0f), tex, {tile, tile}, uvs);
+	}
+	void Renderer2D::draw(const Transform& transform, const shdPtr<Texture2D>& tex, const glm::vec4 color, float tile, glm::vec2* uvs){
+		drawInt(transform.getMat(), color, tex, {tile,tile}, uvs);
+	}
+	void Renderer2D::draw(const Transform& transform, const shdPtr<Texture2D>& tex, const glm::vec4 color, glm::vec2 tile, glm::vec2* uvs){
+		drawInt(transform.getMat(), color, tex, tile, uvs);
+	}
+
 	void Renderer2D::draw(const Transform& transform, const shdPtr<SubTex2D>& tex, float tile){
 		drawInt(transform.getMat(), glm::vec4(1.0f), tex->getTex(), {tile, tile}, tex->getCords());
 	}

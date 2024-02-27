@@ -3,6 +3,7 @@
 namespace Engine{
 	EditorLayer::EditorLayer() : Layer("e"), editorCamera(0.0f){}
 	void EditorLayer::attach(){
+		assetManager = std::make_shared<AssetManager>();
 		Log::callback = [](const std::string& s, int c){
 			const char* str = s.c_str();
 			Console::add(str, c);
@@ -22,6 +23,7 @@ namespace Engine{
 		frameBuffer = std::make_shared<FrameBuffer>(spec);
 
 		assetManager->loadAssetsFolder("Assets");
+		assetManager->load("Assets");
 
 		Console::add("inited", 1);
 	}
@@ -175,6 +177,8 @@ namespace Engine{
 				editorCamera.setAspect(viewportSize.x / viewportSize.y);
 			}
 		}
+		ImVec2 screenPos = ImGui::GetCursorScreenPos();
+		Input::setOffset(screenPos.x, screenPos.y);
 		ImGui::Image((void*)frameBuffer->getColor(), ImVec2{viewportSize.x, viewportSize.y}, ImVec2{0,1}, ImVec2{1,0});
 		if(ImGui::BeginDragDropTarget()){
 			if(auto payload = ImGui::AcceptDragDropPayload("ContentBrowserItem")){
@@ -183,7 +187,6 @@ namespace Engine{
 				if(path.extension() == ".scene")
 					openScene(data);
 			}
-
 		}
 		ImGui::End();
 		ImGui::PopStyleVar();

@@ -1,5 +1,6 @@
 #include "SceneHierarchy.h"
 #include "Settings.h"
+#include "../AssetManager.h"
 #include "../lua/LuaScriptableObject.h"
 #include <filesystem>
 namespace Engine{
@@ -111,24 +112,31 @@ namespace Engine{
 					ImGui::ColorEdit4("color", glm::value_ptr(renderer.color));
 				}else{
 					renderer.mode = Components::SpriteRenderer::Type::Tex;
-					char buf[256];
-					memset(buf, 0, sizeof(buf));
-					strcpy(buf, renderer.path.c_str());
 					float buttonSize = ImGui::GetIO().FontGlobalScale * 150 + 16;
-					ImGui::ImageButton((ImTextureID)renderer.tex->getId(), ImVec2(buttonSize, buttonSize));
+					if(renderer.tex != nullptr)
+						ImGui::ImageButton((ImTextureID)renderer.tex->getId(), ImVec2(buttonSize, buttonSize));
+					else
+						ImGui::Button("no tex selected", ImVec2(buttonSize, buttonSize));
 					if(ImGui::BeginDragDropTarget()){
 						if(auto payload = ImGui::AcceptDragDropPayload("ContentBrowserItem")){
 							const wchar_t* data = (wchar_t*)payload->Data;
 							std::filesystem::path path = data;
-							if(path.extension() == ".png"){
-								renderer.path = path.string();
-								renderer.texture();
+							if(path.extension() == ".tex"){
+								const shdPtr<TextureAsset>& asset = AssetManager::instance->getTex(path);
+								renderer.setTex(asset->getTexture());
+								renderer.texUUID = asset->getId();
 							}
 						}
 					}
-					ImGui::TextWrapped(renderer.path.c_str());
 					ImGui::ColorEdit4("tint", glm::value_ptr(renderer.color));
 					ImGui::DragFloat("tile", &renderer.tile, 0.1, 0);
+					if(ImGui::TreeNode("UVs")){
+						ImGui::InputFloat2("1", glm::value_ptr(*renderer.uvs));
+						ImGui::InputFloat2("2", glm::value_ptr(*(renderer.uvs + 1)));
+						ImGui::InputFloat2("3", glm::value_ptr(*(renderer.uvs + 2)));
+						ImGui::InputFloat2("4", glm::value_ptr(*(renderer.uvs + 3)));
+						ImGui::TreePop();
+					}
 				}
 			});
 			drawComp<Components::NativeScript>("Script", flags, [this](Components::NativeScript& script){

@@ -25,6 +25,51 @@ end
 ---@class Vec2
 ---@field x number
 ---@field y number
+Vec2 = {};
+
+---@return Vec2
+function Vec2.new()
+end
+
+---@return Vec2
+---@param a Vec2
+---@param b Vec2 | number
+function Vec2.add(a, b)
+end
+
+---@return Vec2
+---@param a Vec2
+---@param b Vec2 | number
+function Vec2.sub(a, b)
+end
+
+---@return Vec2
+---@param a Vec2
+---@param b Vec2 | number
+function Vec2.mul(a, b)
+end
+
+---@return Vec2
+---@param a Vec2
+---@param b Vec2 | number
+function Vec2.div(a, b)
+end
+
+---@return number
+---@param a Vec2
+function Vec2.len(a)
+end
+
+---@return number
+---@param a Vec2
+---@param b Vec2
+function Vec2.dist(a, b)
+end
+
+---@return Vec2
+---@param a Vec2
+function Vec2.neg(a)
+end
 
 ---@class Vec3
 ---@field x number
@@ -35,7 +80,7 @@ end
 ---@field r number
 ---@field g number
 ---@field b number
----@field w number
+---@field a number
 
 ---@class Entity
 Entity = {}
@@ -51,12 +96,12 @@ function Entity:getWithName(name)
 end
 
 ---@param comp string
----@return SpriteRenderer | Transform
+---@return Component
 function Entity:addComp(comp)
 end
 
 ---@param comp string
----@return Component
+---@return any
 function Entity:getComp(comp)
 end
 
@@ -109,12 +154,43 @@ end
 function SpriteRenderer:setTint(color)
 end
 
+---@return number
+function SpriteRenderer:getTile()
+end
+
+---@param tile number
+function SpriteRenderer:setTile(tile)
+end
+
+---@param id integer
+---@param val Vec2
+function SpriteRenderer:setUV(id, val)
+end
+
+---@param id integer
+---@return Vec2
+function SpriteRenderer:setUV(id)
+end
+
 ---@class Input
 Input = {}
 
 ---@param keyCode integer
 ---@return boolean
 function Input.keyDown(keyCode)
+end
+
+---@param code integer
+---@return boolean
+function Input.mouseDown(code)
+end
+
+---@return integer
+function Input.mouseX()
+end
+
+---@return integer
+function Input.mouseY()
 end
 
 ---@class Keycodes

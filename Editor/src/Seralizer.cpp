@@ -1,6 +1,7 @@
 #include <fstream>
 #include "Seralizer.h"
 #include "lua/LuaScriptableObject.h"
+#include "AssetManager.h"
 namespace Engine{
 	void Serializer::seralize(const std::string& path){
 		json out;
@@ -56,7 +57,7 @@ namespace Engine{
 		}
 		if(ent.hasComp<Components::SpriteRenderer>()){
 			Components::SpriteRenderer& sprite = ent.getComp<Components::SpriteRenderer>();
-			j["SpriteComp"] = {
+			j["SpriteRendererComp"] = {
 				{"mode", sprite.mode},
 				{"color", {
 					sprite.color.r,
@@ -64,7 +65,7 @@ namespace Engine{
 					sprite.color.b,
 					sprite.color.a
 				}},
-				{"texPath", sprite.path},
+				{"texUUID", (uint64_t)sprite.texUUID},
 				{"tile", sprite.tile},
 			};
 		}
@@ -123,23 +124,23 @@ namespace Engine{
 				comp.fixedAspect = ent["CameraComp"]["fixedAspect"];
 				comp.mainCamera = ent["CameraComp"]["mainCamera"];
 			}
-			if(ent.contains("SpriteComp")){
+			if(ent.contains("SpriteRendererComp")){
 				auto& comp = ent2.addComp<Components::SpriteRenderer>();
-				int mode = ent["SpriteComp"]["mode"];
+				int mode = ent["SpriteRendererComp"]["mode"];
 				glm::vec4 color = {
-					ent["SpriteComp"]["color"][0],
-					ent["SpriteComp"]["color"][1],
-					ent["SpriteComp"]["color"][2],
-					ent["SpriteComp"]["color"][3]
+					ent["SpriteRendererComp"]["color"][0],
+					ent["SpriteRendererComp"]["color"][1],
+					ent["SpriteRendererComp"]["color"][2],
+					ent["SpriteRendererComp"]["color"][3]
 				};
-				std::string path = ent["SpriteComp"]["texPath"];
-				float tile = ent["SpriteComp"]["tile"];
+				UUID id = (int64_t)ent["SpriteRendererComp"]["texUUID"];
+				float tile = ent["SpriteRendererComp"]["tile"];
 
 				comp.color = color;
-				comp.path = path;
+				comp.texUUID = id;
 				comp.tile = tile;
 				comp.setMode(mode);
-				comp.texture();
+				comp.setTex(AssetManager::instance->getTex(id)->getTexture());
 			}
 			if(ent.contains("ScriptComp")){
 				auto& comp = ent2.addComp<Components::NativeScript>();

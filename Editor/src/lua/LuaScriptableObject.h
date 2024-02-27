@@ -33,7 +33,9 @@ namespace Engine{
 			inited = true;
 		}
 		~LuaScriptableObject(){
-			lua_close(l);
+			if(l != nullptr){
+				lua_close(l);
+			}
 			state = false;
 		}
 		void create(){
@@ -65,6 +67,7 @@ namespace Engine{
 				}
 			}
 			lua_close(l);
+			l = nullptr;
 			state = false;
 			inited = false;
 		}

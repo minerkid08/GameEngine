@@ -11,6 +11,18 @@ namespace Engine{
 		lua_pushcfunction(l, setTint);
 		lua_setfield(l, -2, "setTint");
 
+		lua_pushcfunction(l, getTile);
+		lua_setfield(l, -2, "getTile");
+
+		lua_pushcfunction(l, setTile);
+		lua_setfield(l, -2, "setTile");
+		
+		lua_pushcfunction(l, getUv);
+		lua_setfield(l, -2, "getUV");
+
+		lua_pushcfunction(l, getUv);
+		lua_setfield(l, -2, "setUV");
+
 		lua_pushlightuserdata(l, (void*)(entt::entity)ent);
 		lua_setfield(l, -2, "id");
 
@@ -49,5 +61,44 @@ namespace Engine{
 		getComp();
 		renderer.color = {x, y, z, w};
 		return 0;
+	}
+	
+	int LuaSpriteRenderer::setTile(lua_State* l){
+		getComp();
+		renderer.tile = lua_tonumber(l, 2);
+		return 0;
+	}
+	
+	int LuaSpriteRenderer::getTile(lua_State* l){
+		getComp();
+		lua_pushnumber(l, renderer.tile);
+		return 1;
+	}
+
+	int LuaSpriteRenderer::setUv(lua_State* l){
+		getComp();
+		lua_getfield(l, 3, "x");
+		float x = lua_tonumber(l, -1);
+		lua_pop(l, 1);
+		lua_getfield(l, 3, "y");
+		float y = lua_tonumber(l, -1);
+		lua_pop(l, 1);
+		int ind = lua_tointeger(l, 2);
+		renderer.uvs[ind].x = x;
+		renderer.uvs[ind].y = y;
+		return 0;
+	}
+	
+	int LuaSpriteRenderer::getUv(lua_State* l){
+		getComp();
+		int ind = lua_tointeger(l, 2);
+		float x = renderer.uvs[ind].x;
+		float y = renderer.uvs[ind].y;
+		lua_newtable(l);
+		lua_pushnumber(l, x);
+		lua_setfield(l, -1, "x");
+		lua_pushnumber(l, y);
+		lua_setfield(l, -1, "y");
+		return 1;
 	}
 }

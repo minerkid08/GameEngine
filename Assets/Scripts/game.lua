@@ -1,11 +1,14 @@
 transform = nil;
+---@type Transform
+local src = nil;
+---@type Vec2
+local srcPos = nil;
+---@type Transform
+local dest = nil;
+---@type Vec2
+local destPos = nil;
 
-src = nil;
-srcPos = nil;
-dest = nil;
-destPos = nil;
-
-velStep = 0.05;
+local velStep = 0.05;
 
 function create()
     transform = entity:getComp("transform");
@@ -16,16 +19,16 @@ end
 
 function update()
     srcPos = Vec2.new();
-    if(input.keyDown(keycodes.w)) then
+    if(Input.keyDown(Keycodes.w)) then
         srcPos.y = 1;
     end
-    if(input.keyDown(keycodes.s)) then
+    if(Input.keyDown(Keycodes.s)) then
         srcPos.y = -1;
     end
-    if(input.keyDown(keycodes.a)) then
+    if(Input.keyDown(Keycodes.a)) then
         srcPos.x = 1;
     end
-    if(input.keyDown(keycodes.d)) then
+    if(Input.keyDown(Keycodes.d)) then
         srcPos.x = -1;
     end
     destPos = velocity({x = 0, y = 0}, srcPos);

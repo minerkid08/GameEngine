@@ -1,5 +1,6 @@
 #include "TextureAsset.h"
-
+#include <fstream>
+#include <Core/Log.h>
 namespace Engine{
 	TextureAsset::TextureAsset(){
 
@@ -12,9 +13,13 @@ namespace Engine{
 	void TextureAsset::loadFromAsset(std::filesystem::path newPath){
 		std::filesystem::path texPath = newPath;
 		texPath.replace_extension(".png");
-		std::string pathString = newPath.string();
+		std::string pathString = texPath.string();
 		tex = std::make_shared<Texture2D>(pathString);
-		nlohmann::json j(newPath);
+		Log::Info((std::string("loading: ") + texPath.string()).c_str());
+		std::ifstream stream(newPath);
+		std::stringstream sstream;
+		sstream << stream.rdbuf();
+		nlohmann::json j = nlohmann::json::parse(sstream);
 		id = (uint64_t)j["id"];
 		path = newPath;	
 	}
@@ -28,8 +33,10 @@ namespace Engine{
 	}
 
 	void TextureAsset::save(){
-		nlohmann::json j(path);
+		nlohmann::json j;
 		j["id"] = (uint64_t)id;
+		std::ofstream ofstream(path);
+		ofstream << j.dump(4);
 	}
 
 	const shdPtr<Texture2D>& TextureAsset::getTexture(){

@@ -1,0 +1,22 @@
+{
+	"projects": [
+		{
+			"name": "Engine",
+			"build": ["include"],
+			"include": ["include", "Engine\\src"],
+			"type": "dll",
+			"out": "engine.dll",
+			"dll": ["glfw3", "gdi32"],
+			"sdll": ["opengl32"]
+		},
+		{
+			"name": "Editor",
+			"build": [],
+			"include": ["include", "Engine\\src", "Editor\\src"],
+			"type": "exe",
+			"out": "editor.exe",
+			"dll": ["lua54", "engine"],
+			"sdll": []
+		}
+	]
+}

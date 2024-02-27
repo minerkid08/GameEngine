@@ -37,15 +37,16 @@ namespace Engine{
 			enum Type {Color = 0, Tex = 1};
 			Type mode = Type::Color;
 			glm::vec4 color = {0.0f, 0.0f, 0.0f, 1.0f};
-			shdPtr<Texture2D> tex;
+			glm::vec2 uvs[4] = {{0, 0}, {1, 0}, {0, 1}, {1, 1}};
+			shdPtr<Texture2D> tex = nullptr;
+			UUID texUUID;
 			float tile = 1.0f;
-			std::string path;
-			SpriteRenderer(){
-				texture();
-			}
+			SpriteRenderer(){}
 			SpriteRenderer(const SpriteRenderer&) = default;
 			SpriteRenderer(const glm::vec4 _color){
 				color = _color;
+			}
+			~SpriteRenderer(){
 			}
 			void setMode(int _mode){
 				if(_mode == 1){
@@ -54,8 +55,8 @@ namespace Engine{
 					mode = Type::Color;
 				}
 			}
-			void texture(){
-				tex = std::make_shared<Texture2D>(path.empty() ? "Engine/Textures/logo.png" : path.c_str());
+			void setTex(const shdPtr<Texture2D>& _tex){
+				tex = _tex;
 			}
 			void reset(){
 				mode = Type::Color;

@@ -3,6 +3,12 @@
 namespace Engine{
 	class API Input{
 		public:
+		float xOffset = 0;
+		float yOffset = 0;
+		static void setOffset(float x, float y){
+			instance->xOffset = x;
+			instance->yOffset = y;
+		}
 		inline static bool keyDown(int key){return instance->keyDownImpl(key);}
 
 		inline static bool mouseDown(int btn){return instance->mouseDownImpl(btn);}

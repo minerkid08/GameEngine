@@ -1,34 +1,93 @@
 #include "AssetManager.h"
+#include <fstream>
+#include <iostream>
 
 namespace Engine{
+	AssetManager* AssetManager::instance = nullptr;
 	AssetManager::AssetManager(){
-
+		textures = {};
+		instance = this;
 	}
 	AssetManager::~AssetManager(){
 
 	}
 	void AssetManager::loadAssetsFolder(std::filesystem::path path){
-		for(auto folder : std::filesystem::directory_iterator(path)){
-			if(folder.is_directory()){
+		std::vector<std::filesystem::path> folders;
+		folders.push_back(path);
 
-			}else{
-				if(folder.path().extension() == ".tex"){
-					shdPtr<TextureAsset> asset = std::make_shared<TextureAsset>();
-					asset->loadFromAsset(folder.path());
-					addTex(asset, asset->getId());
+		while(folders.size() > 0){
+			std::filesystem::path curFolder = folders[0];
+			for(int j = 1; j < folders.size(); j++){
+				folders[j - 1] = folders[j];
+			}
+			folders.resize(folders.size() - 1);
+
+			for(auto file : std::filesystem::directory_iterator(curFolder)){
+				if(file.is_directory()){
+					if(file.path().filename() == ".vscode" || file.path().filename() == ".git"){
+						continue;
+					}
+					folders.push_back(file.path());
+				}else{
+					if(file.path().extension() == ".tex"){
+						shdPtr<TextureAsset> asset = std::make_shared<TextureAsset>();
+						asset->loadFromAsset(file.path());
+						addTex(asset, asset->getId());
+					}
 				}
 			}
 		}
 	}
 	void AssetManager::load(std::filesystem::path path){
-		
+		std::vector<std::filesystem::path> folders;
+		folders.push_back(path);
+
+		while(folders.size() > 0){
+			std::filesystem::path curFolder = folders[0];
+			for(int j = 1; j < folders.size(); j++){
+				folders[j - 1] = folders[j];
+			}
+			folders.resize(folders.size() - 1);
+
+			for(auto file : std::filesystem::directory_iterator(curFolder)){
+				if(file.is_directory()){
+					if(file.path().filename() == ".vscode" || file.path().filename() == ".git"){
+						continue;
+					}
+					folders.push_back(file.path());
+				}else{
+					if(file.path().extension() == ".png"){
+						std::string path = file.path().string();
+						if(std::filesystem::exists(path.substr(0, path.size() - 4) + ".tex")){
+							continue;
+						}
+						shdPtr<TextureAsset> asset = std::make_shared<TextureAsset>();
+						asset->create(path.substr(0, path.size() - 4) + ".tex");
+						asset->save();
+						addTex(asset, asset->getId());
+					}
+				}
+			}
+		}
 	}
 	void AssetManager::addTex(const shdPtr<TextureAsset>& tex, UUID id){
-		textures.insert({id, tex});
+		textures.emplace(id, tex);
 	}
 
 	const shdPtr<TextureAsset>& AssetManager::getTex(UUID id){
 		return textures.at(id);
+	}
+
+	const shdPtr<TextureAsset>& AssetManager::getTex(std::filesystem::path path){
+		std::stringstream ss;
+		std::ifstream stream(path);
+		ss << stream.rdbuf();
+		nlohmann::json j = nlohmann::json::parse(ss);
+		UUID id = (uint64_t)j["id"];
+		if(textures.find(id) == textures.end()){
+			std::cout << "tex " << id << " not in list" << std::endl;
+		}
+		return textures[id];
 	}
 
 	void AssetManager::save(){

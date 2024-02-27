@@ -25,15 +25,20 @@ namespace Engine{
 		ImGui::Columns(columCount, 0, false);
 		int i = 0;
 		for(auto& p : std::filesystem::directory_iterator(curPath)){
+			std::filesystem::path path2 = p.path().filename();
+			std::string extension = path2.extension().string();
+			if(extension == ".png"){
+				continue;
+		}
+			std::string path = path2.string().substr(0, path2.string().size() - extension.size());
 			ImGui::PushID(i++);
-			std::string path = p.path().filename().string();
 			if(p.is_directory()){
-				auto name = p.path().filename();
-				if(ImGui::Button("folder.png", ImVec2(buttonSize, buttonSize))){
+				auto name = p.path().filename().string();
+				if(ImGui::Button("folder", ImVec2(buttonSize, buttonSize))){
 					curPath /= name;
 				}
 			}else{
-				if(ImGui::Button("file.png", ImVec2(buttonSize, buttonSize))){
+				if(ImGui::Button(extension.c_str(), ImVec2(buttonSize, buttonSize))){
 					ImGui::OpenPopup("CBCtxMenu");
 					ctxMenuPath = p.path();
 				}

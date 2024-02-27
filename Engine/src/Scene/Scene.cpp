@@ -53,10 +53,10 @@ namespace Engine{
 			if(Entity(this, ent)){
 				auto sprite = group.get<Components::SpriteRenderer>(ent);
 				auto transform = registry.get<Components::Transform>(ent);
-				if(sprite.mode == Components::SpriteRenderer::Type::Color){
+				if(sprite.mode == Components::SpriteRenderer::Type::Color || sprite.tex == nullptr){
 					Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.color);
 				}else{
-					Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.tex, sprite.color, sprite.tile);
+					Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.tex, sprite.color, {sprite.tile}, sprite.uvs);
 				}
 			}
 		}
@@ -81,10 +81,10 @@ namespace Engine{
 			if(Entity(this, ent)){
 				auto sprite = group.get<Components::SpriteRenderer>(ent);
 				auto transform = registry.get<Components::Transform>(ent);
-				if(sprite.mode == Components::SpriteRenderer::Type::Color){
+				if(sprite.mode == Components::SpriteRenderer::Type::Color || sprite.tex == nullptr){
 					Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.color);
 				}else{
-					Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.tex, sprite.color, sprite.tile);
+					Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.tex, sprite.color, sprite.tile, sprite.uvs);
 				}
 			}
 		}
@@ -96,10 +96,10 @@ namespace Engine{
 		for(auto ent : group){
 			auto sprite = group.get<Components::SpriteRenderer>(ent);
 			auto transform = registry.get<Components::Transform>(ent);
-			if(sprite.mode == Components::SpriteRenderer::Type::Color){
+			if(sprite.mode == Components::SpriteRenderer::Type::Color || sprite.tex == nullptr){
 				Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.color);
 			}else{
-				Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.tex, sprite.color, sprite.tile);
+				Renderer2D::draw({transform.pos, transform.rot, transform.scale}, sprite.tex, sprite.color, sprite.tile, sprite.uvs);
 			}
 		}
 		Renderer2D::endScene();

@@ -21,13 +21,13 @@ namespace Engine{
 		double x = 0;
 		double y = 0;
 		glfwGetCursorPos(window, &x, &y);
-		return (float)x;
+		return (float)x - xOffset;
 	}
 	float Input::mouseYImpl(){
 		GLFWwindow* window = App::getInstance().getWindow().getWindow();
 		double x = 0;
 		double y = 0;
 		glfwGetCursorPos(window, &x, &y);
-		return (float)y;
+		return (float)y - yOffset;
 	}
 }

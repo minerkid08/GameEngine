@@ -23,6 +23,9 @@ namespace Engine{
 		static void draw(const Transform& transform, const shdPtr<Texture2D>& tex, float tile = 1);
 		static void draw(const Transform& transform, const shdPtr<Texture2D>& tex, const glm::vec4 color, float tile = 1);
 		static void draw(const Transform& transform, const shdPtr<Texture2D>& tex, const glm::vec4 color, glm::vec2 tile);
+		static void draw(const Transform& transform, const shdPtr<Texture2D>& tex, float tile, glm::vec2* uvs);
+		static void draw(const Transform& transform, const shdPtr<Texture2D>& tex, const glm::vec4 color, float tile, glm::vec2* uvs);
+		static void draw(const Transform& transform, const shdPtr<Texture2D>& tex, const glm::vec4 color, glm::vec2 tile, glm::vec2* uvs);
 		static void draw(const Transform& transform, const shdPtr<SubTex2D>& tex, float tile = 1);
 		static void draw(const Transform& transform, const shdPtr<SubTex2D>& tex, const glm::vec4 color, float tile = 1);
 		static void draw(const Transform& transform, const shdPtr<SubTex2D>& tex, const glm::vec4 color, glm::vec2 tile);
