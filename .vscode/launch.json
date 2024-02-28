@@ -18,7 +18,7 @@
             "stopAtEntry": false,
             "type": "cppdbg",
             "windows": {
-                "miDebuggerPath": "C:/w64devkit/bin/gdb.exe"
+                "miDebuggerPath": "C:/raylib/w64devkit/bin/gdb.exe"
             }
         },
         {
@@ -39,7 +39,27 @@
             "stopAtEntry": false,
             "type": "cppdbg",
             "windows": {
-                "miDebuggerPath": "C:/w64devkit/bin/gdb.exe"
+                "miDebuggerPath": "C:/raylib/w64devkit/bin/gdb.exe"
+            }
+        },
+		{
+            "MIMode": "gdb",
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false,
+            "name": "Editor Run",
+            "program": "${workspaceFolder}/bin/editor.exe",
+            "request": "launch",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "ignoreFailures": false,
+                    "text": "-enable-pretty-printing"
+                }
+            ],
+            "stopAtEntry": false,
+            "type": "cppdbg",
+            "windows": {
+                "miDebuggerPath": "C:/raylib/w64devkit/bin/gdb.exe"
             }
         }
     ],

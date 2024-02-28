@@ -1,0 +1,96 @@
+{
+    "Scene": "name",
+    "entities": [
+        {
+            "SpriteRendererComp": {
+                "color": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "mode": 1,
+                "texUUID": 1744932835478450665,
+                "tile": 1.0
+            },
+            "TagComp": {
+                "Tag": "player",
+                "UUID": -280553214
+            },
+            "TransformComp": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "rot": 0.0,
+                "scale": [
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "ScriptComp": {
+                "active": true,
+                "hasScript": true,
+                "path": "Assets\\Scripts\\main.lua"
+            },
+            "SpriteRendererComp": {
+                "color": [
+                    1.0,
+                    1.0,
+                    0.9921568632125854,
+                    1.0
+                ],
+                "mode": 1,
+                "texUUID": 9152104070647037316,
+                "tile": 1.0
+            },
+            "TagComp": {
+                "Tag": "Main",
+                "UUID": 302417570
+            },
+            "TransformComp": {
+                "pos": [
+                    -1.5,
+                    0.0,
+                    0.20000000298023224
+                ],
+                "rot": 0.0,
+                "scale": [
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "CameraComp": {
+                "Camera": {
+                    "aspect": 2.0,
+                    "far": 1.0,
+                    "near": -1.0,
+                    "zoom": 2.0
+                },
+                "fixedAspect": true,
+                "mainCamera": true
+            },
+            "TagComp": {
+                "Tag": "Camera",
+                "UUID": 729112991
+            },
+            "TransformComp": {
+                "pos": [
+                    0.875,
+                    -0.75,
+                    0.0
+                ],
+                "rot": 0.0,
+                "scale": [
+                    1.0,
+                    1.0
+                ]
+            }
+        }
+    ]
+}

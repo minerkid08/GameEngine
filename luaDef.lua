@@ -96,7 +96,7 @@ function Entity:getWithName(name)
 end
 
 ---@param comp string
----@return Component
+---@return any
 function Entity:addComp(comp)
 end
 
@@ -169,7 +169,19 @@ end
 
 ---@param id integer
 ---@return Vec2
-function SpriteRenderer:setUV(id)
+function SpriteRenderer:getUV(id)
+end
+
+---@param tex integer
+function SpriteRenderer:setTex(tex)
+end
+
+---@return integer
+function SpriteRenderer:getTex()
+end
+
+---@param mode string
+function SpriteRenderer:setMode(mode)
 end
 
 ---@class Input

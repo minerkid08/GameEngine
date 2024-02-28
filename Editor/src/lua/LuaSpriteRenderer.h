@@ -12,5 +12,8 @@ namespace Engine{
 		static int getTile(lua_State* l);
 		static int setUv(lua_State* l);
 		static int getUv(lua_State* l);
+		static int setTex(lua_State* l);
+		static int getTex(lua_State* l);
+		static int setMode(lua_State* l);
 	};
 }

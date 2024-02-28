@@ -140,7 +140,9 @@ namespace Engine{
 				comp.texUUID = id;
 				comp.tile = tile;
 				comp.setMode(mode);
-				comp.setTex(AssetManager::instance->getTex(id)->getTexture());
+				if(mode == Components::SpriteRenderer::Type::Tex){
+					comp.setTex(AssetManager::instance->getTex(id)->getTexture());
+				}
 			}
 			if(ent.contains("ScriptComp")){
 				auto& comp = ent2.addComp<Components::NativeScript>();

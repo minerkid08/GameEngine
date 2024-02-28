@@ -1,0 +1,68 @@
+{
+    "Scene": "name",
+    "entities": [
+        {
+            "ScriptComp": {
+                "active": true,
+                "hasScript": true,
+                "path": "Assets\\Scripts\\test.lua"
+            },
+            "SpriteRendererComp": {
+                "color": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "mode": 1,
+                "texUUID": 9152104070647037316,
+                "tile": 1.0
+            },
+            "TagComp": {
+                "Tag": "thing with no name",
+                "UUID": -2119420432
+            },
+            "TransformComp": {
+                "pos": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rot": 0.0,
+                "scale": [
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "SpriteRendererComp": {
+                "color": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "mode": 1,
+                "texUUID": 15746878807478121748,
+                "tile": 1.0
+            },
+            "TagComp": {
+                "Tag": "ent2",
+                "UUID": -17507745
+            },
+            "TransformComp": {
+                "pos": [
+                    1.2000000476837158,
+                    0.0,
+                    0.0
+                ],
+                "rot": 0.0,
+                "scale": [
+                    1.0,
+                    1.0
+                ]
+            }
+        }
+    ]
+}

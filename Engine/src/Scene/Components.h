@@ -37,7 +37,7 @@ namespace Engine{
 			enum Type {Color = 0, Tex = 1};
 			Type mode = Type::Color;
 			glm::vec4 color = {0.0f, 0.0f, 0.0f, 1.0f};
-			glm::vec2 uvs[4] = {{0, 0}, {1, 0}, {0, 1}, {1, 1}};
+			glm::vec2 uvs[4] = {{0, 0}, {1, 0}, {1, 1}, {0, 1}};
 			shdPtr<Texture2D> tex = nullptr;
 			UUID texUUID;
 			float tile = 1.0f;

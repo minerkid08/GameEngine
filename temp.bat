@@ -1,2 +1,2 @@
-Build.exe
+editor.exe.lnk
 pause

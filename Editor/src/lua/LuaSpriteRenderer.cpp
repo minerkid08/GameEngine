@@ -1,5 +1,5 @@
 #include "LuaSpriteRenderer.h"
-
+#include "AssetManager.h"
 namespace Engine{
 	int LuaSpriteRenderer::make(lua_State* l, const Entity& ent){
 		lua_newtable(l);
@@ -20,8 +20,17 @@ namespace Engine{
 		lua_pushcfunction(l, getUv);
 		lua_setfield(l, -2, "getUV");
 
-		lua_pushcfunction(l, getUv);
+		lua_pushcfunction(l, setUv);
 		lua_setfield(l, -2, "setUV");
+		
+		lua_pushcfunction(l, getTex);
+		lua_setfield(l, -2, "getTex");
+
+		lua_pushcfunction(l, setTex);
+		lua_setfield(l, -2, "setTex");
+
+		lua_pushcfunction(l, setMode);
+		lua_setfield(l, -2, "setMode");
 
 		lua_pushlightuserdata(l, (void*)(entt::entity)ent);
 		lua_setfield(l, -2, "id");
@@ -76,7 +85,6 @@ namespace Engine{
 	}
 
 	int LuaSpriteRenderer::setUv(lua_State* l){
-		getComp();
 		lua_getfield(l, 3, "x");
 		float x = lua_tonumber(l, -1);
 		lua_pop(l, 1);
@@ -84,6 +92,7 @@ namespace Engine{
 		float y = lua_tonumber(l, -1);
 		lua_pop(l, 1);
 		int ind = lua_tointeger(l, 2);
+		getComp();
 		renderer.uvs[ind].x = x;
 		renderer.uvs[ind].y = y;
 		return 0;
@@ -100,5 +109,27 @@ namespace Engine{
 		lua_pushnumber(l, y);
 		lua_setfield(l, -1, "y");
 		return 1;
+	}
+
+	int LuaSpriteRenderer::setTex(lua_State* l){
+		getComp();
+		renderer.texUUID = lua_tointeger(l, 2);
+		renderer.setTex(AssetManager::instance->getTex(renderer.texUUID)->getTexture());
+		return 0;
+	}
+	int LuaSpriteRenderer::getTex(lua_State* l){
+		getComp();
+		lua_pushinteger(l, renderer.texUUID);
+		return 1;
+	}
+	int LuaSpriteRenderer::setMode(lua_State* l){
+		std::string name = lua_tostring(l, 2);
+		getComp();
+		if(name == "sprite"){
+			renderer.setMode(Components::SpriteRenderer::Type::Tex);
+		}
+		if(name == "color"){
+			renderer.setMode(Components::SpriteRenderer::Type::Tex);
+		}
 	}
 }

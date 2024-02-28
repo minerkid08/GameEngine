@@ -24,11 +24,6 @@ namespace Engine{
 		glfwMakeContextCurrent(window);
 		glfwSetWindowUserPointer(window, data);
 
-		GLFWimage image; 
-		image.pixels = stbi_load(logoPath.c_str(), &image.width, &image.height, 0, 0); 
-		glfwSetWindowIcon(window, 1, &image); 
-		stbi_image_free(image.pixels);
-
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		if(!status){
 			Log::Error("Could not init GLAD");
