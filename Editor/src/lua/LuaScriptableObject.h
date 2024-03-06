@@ -6,6 +6,7 @@
 #include "LuaTransform.h"
 #include "LuaInput.h"
 #include "LuaKeyCodes.h"
+#include "LuaWorld.h"
 #include "LuaEntity.h"
 #include "LuaVec2.h"
 namespace Engine{
@@ -22,6 +23,7 @@ namespace Engine{
 			LuaKeycode::make(l);
 			LuaEntity::make(l, &ent);
 			LuaVec2::make(l);
+			LuaWorld::make(l);
 			LuaTransform::make(l, ent);
 			lua_setglobal(l, "transform");
 

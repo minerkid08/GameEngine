@@ -8,8 +8,13 @@
 namespace Engine{
 	class API Window{
 		public:
+		enum class WindowMode{
+			Fullscreen,
+			Windowed,
+			FullscreenWindowed
+		};
 		using EventCallbackFn = std::function<void(Event&)>;
-		Window(unsigned int width, unsigned int height, std::string title, std::string logoPath = "Engine/Textures/logo.png");
+		Window(unsigned int width, unsigned int height, std::string title, std::string logoPath = "Engine/Textures/logo.png", WindowMode mode = WindowMode::Windowed);
 		~Window();
 		void update();
 		void shutdown();
@@ -35,6 +40,7 @@ namespace Engine{
 			unsigned int width;
 			unsigned int height;
 			EventCallbackFn callback;
+			WindowMode mode;
 		};
 		WindowData* data;
 		GLFWwindow* window;

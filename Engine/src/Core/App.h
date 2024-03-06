@@ -15,7 +15,7 @@ namespace Engine{
 	class API App{
 		public:
 		App(const char* title);
-		App(int width, int height, const char* title);
+		App(int width, int height, const char* title, Window::WindowMode mode);
 		~App();
 		void run();
 		void event(Event& e);

@@ -9,8 +9,13 @@ namespace Engine{
 	}
 	void ContentBrowser::render(const shdPtr<AssetManager>& assetManager){
 		ImGui::Begin("Content Browser");
+		if(ImGui::Button("r")){
+			AssetManager::instance->updateAssets();
+		}
+		ImGui::SameLine();
 		ImGui::Text(curPath.string().c_str());
 		if(curPath != mainPath){
+			ImGui::SameLine();
 			if(ImGui::Button("<-")){
 				curPath = curPath.parent_path();
 			}
@@ -22,14 +27,15 @@ namespace Engine{
 		if(columCount < 1){
 			columCount = 1;
 		}
-		ImGui::Columns(columCount, 0, false);
+		ImGui::BeginTable("table", columCount, ImGuiTableFlags_SizingFixedFit);
+		ImGui::TableNextColumn();
 		int i = 0;
 		for(auto& p : std::filesystem::directory_iterator(curPath)){
 			std::filesystem::path path2 = p.path().filename();
-			std::string extension = path2.extension().string();
-			if(extension == ".png"){
+			std::string extension = path2.extension().string().substr(__min(1, path2.extension().string().size()));
+			if(extension == "png"){
 				continue;
-		}
+			}
 			std::string path = path2.string().substr(0, path2.string().size() - extension.size());
 			ImGui::PushID(i++);
 			if(p.is_directory()){
@@ -49,9 +55,10 @@ namespace Engine{
 				}
 			}
 			ImGui::TextWrapped(path.c_str());
-			ImGui::NextColumn();
+			ImGui::TableNextColumn();
 			ImGui::PopID();
 		}
+		ImGui::EndTable();
 		ImGui::End();
 		if(ImGui::BeginPopup("CBCtxMenu")){
 			if(ImGui::MenuItem("makeAsset")){

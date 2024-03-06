@@ -14,6 +14,7 @@ namespace Engine{
 		Texture2D(int width, int height);
 		void setData(void* data, int size);
 		~Texture2D();
+		void loadFromFile(const std::string& path);
 		int getWidth(){return width;}
 		int getHeight(){return height;}
 		void bind(unsigned int slot = 0);

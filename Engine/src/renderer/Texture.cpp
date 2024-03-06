@@ -40,6 +40,16 @@ namespace Engine{
 	Texture2D::~Texture2D(){
 		glDeleteTextures(1, &id);
 	}
+	void Texture2D::loadFromFile(const std::string& path){
+		int channels;
+		int _width;
+		int _height;
+		unsigned char* data = stbi_load(path.c_str(), &_width, &_height, &channels, 0);
+		if(data == nullptr){
+			Log::Error("Failed to load image: " + path);
+		}
+		glTextureSubImage2D(id, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
+	}
 	void Texture2D::setData(void* data, int size){
 		int s2 = width * height * (format == GL_RGBA ? 4 : 3);
 		if(size != s2){

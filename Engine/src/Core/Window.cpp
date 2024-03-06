@@ -5,11 +5,12 @@
 #include "Events/MouseEvent.h"
 #include <stb/stbImage.h>
 namespace Engine{
-	Window::Window(unsigned int _width, unsigned int _height, std::string _title, std::string logoPath){
+	Window::Window(unsigned int _width, unsigned int _height, std::string _title, std::string logoPath, WindowMode winMode){
 		data = new WindowData();
 		data->width = _width;
 		data->height = _height;
 		data->title = _title;
+		data->mode = winMode;
 		Log::Info("CreateWindow: " + data->title + ", (" + std::to_string(data->width) + ", " + std::to_string(data->height) + ")");
 		if(!glfwInited){
 			bool sucess = glfwInit();
@@ -20,7 +21,22 @@ namespace Engine{
 			glfwInited = true;
 		}
 
-		window = glfwCreateWindow(data->width, data->height, data->title.c_str(), NULL, NULL);
+		if(data->mode == WindowMode::FullscreenWindowed){
+			GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+
+			const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+			glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+			glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+			glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+			glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+
+			window = glfwCreateWindow(mode->width, mode->height, data->title.c_str(), NULL, NULL);
+		}else{
+			window = glfwCreateWindow(data->width, data->height, data->title.c_str(), NULL, NULL);
+		}
+
 		glfwMakeContextCurrent(window);
 		glfwSetWindowUserPointer(window, data);
 
@@ -31,10 +47,12 @@ namespace Engine{
 
 		glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height){
 			WindowData* a = (WindowData*)glfwGetWindowUserPointer(window);
-			a->width = width;
-			a->height = height;
-			WindowResizeEvent e(width, height);
-			a->callback(e);
+			if(a->mode == WindowMode::Windowed){
+				a->width = width;
+				a->height = height;
+				WindowResizeEvent e(width, height);
+				a->callback(e);
+			}
 		});
 		glfwSetWindowCloseCallback(window, [](GLFWwindow* window){
 			WindowData* a = (WindowData*)glfwGetWindowUserPointer(window);

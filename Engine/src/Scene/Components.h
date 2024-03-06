@@ -120,11 +120,12 @@ namespace Engine{
 			void reset();
 		};
 		struct Tilemap{
-			int* tiles;
-			SubTex2D* textures;
-			int texCount;
-			int tileSize;
-			int gridSize;
+			int* tiles = nullptr;
+			shdPtr<Texture2D> texture;
+			int tileSetSizeX = 1;
+			int tileSetSizeY = 1;
+			int gridSizeX = 0;
+			int gridSizeY = 0;
 			Tilemap() = default;
 			Tilemap(const Tilemap&) = default;
 			~Tilemap() = default;

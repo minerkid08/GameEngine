@@ -1,4 +1,8 @@
 #include "Log.h"
+#include "Args.h"
+
+int Args::argc = 1;
+const char** Args::argv = nullptr;
 
 namespace Engine{
 	std::function<void(const char*, int)> Log::callback = [](const char* str, int i){

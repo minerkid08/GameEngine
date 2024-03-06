@@ -184,6 +184,17 @@ end
 function SpriteRenderer:setMode(mode)
 end
 
+---@class World
+World = {};
+
+---@return integer
+function World.getWindowWidth()
+end
+
+---@return integer
+function World.getWindowHeight()
+end
+
 ---@class Input
 Input = {}
 

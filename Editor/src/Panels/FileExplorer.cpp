@@ -63,11 +63,17 @@ namespace Engine{
 		if(columCount < 1){
 			columCount = 1;
 		}
-		ImGui::Columns(columCount, 0, false);
+		ImGui::BeginTable("FEXtable", columCount, ImGuiTableFlags_SizingFixedFit);
+		ImGui::TableNextColumn();
 		int i = 0;
 		for(auto& p : std::filesystem::directory_iterator(curPath)){
 			ImGui::PushID(i++);
-			std::string path = p.path().filename().string();
+			std::filesystem::path path2 = p.path().filename();
+			std::string extension = path2.extension().string().substr(__min(1, path2.extension().string().size()));
+			if(extension == "png"){
+				continue;
+			}
+			std::string path = path2.string().substr(0, path2.string().size() - extension.size());
 			if(p.is_directory()){
 				if(!(flags & FileExplorerFlags_DontShowFolders)){
 					auto name = p.path().filename();
@@ -75,24 +81,26 @@ namespace Engine{
 						curPath /= name;
 					}
 					ImGui::TextWrapped(path.c_str());
-					ImGui::NextColumn();
+					ImGui::TableNextColumn();
 				}
 			}else{
 				if(!(flags & FileExplorerFlags_DontShowFiles)){
-					if(ImGui::Button("file.png", ImVec2(buttonSize, buttonSize))){
+					if(ImGui::Button(extension.c_str(), ImVec2(buttonSize, buttonSize))){
 						if(p.path().extension() == ext){
 							outPath = p.path();
 							ImGui::PopID();
+							ImGui::EndTable();
 							ImGui::End();
 							return 1;
 						} 
 					}
 					ImGui::TextWrapped(path.c_str());
-					ImGui::NextColumn();
+					ImGui::TableNextColumn();
 				}
 			}
 			ImGui::PopID();
 		}
+		ImGui::EndTable();
 		ImGui::End();
 		return 0;
 	}

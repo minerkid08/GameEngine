@@ -13,6 +13,7 @@ namespace Engine{
 		void loadFromAsset(std::filesystem::path newPath);
 		void create(std::filesystem::path newPath);
 		void save();
+		void reload();
 		const shdPtr<Texture2D>& getTexture();
 		UUID getId(){return id;}
 		private:

@@ -4,7 +4,7 @@
             "MIMode": "gdb",
             "cwd": "${workspaceFolder}",
             "externalConsole": false,
-            "name": "Engine",
+            "name": "Engine: build",
             "preLaunchTask": "Engine",
             "program": "${workspaceFolder}/bin/engine.dll",
             "request": "launch",
@@ -18,14 +18,14 @@
             "stopAtEntry": false,
             "type": "cppdbg",
             "windows": {
-                "miDebuggerPath": "C:/raylib/w64devkit/bin/gdb.exe"
+                "miDebuggerPath": "C:/w64devkit/bin/gdb.exe"
             }
         },
         {
             "MIMode": "gdb",
             "cwd": "${workspaceFolder}",
             "externalConsole": false,
-            "name": "Editor",
+            "name": "Editor: build",
             "preLaunchTask": "Editor",
             "program": "${workspaceFolder}/bin/editor.exe",
             "request": "launch",
@@ -39,14 +39,14 @@
             "stopAtEntry": false,
             "type": "cppdbg",
             "windows": {
-                "miDebuggerPath": "C:/raylib/w64devkit/bin/gdb.exe"
+                "miDebuggerPath": "C:/w64devkit/bin/gdb.exe"
             }
         },
-		{
+        {
             "MIMode": "gdb",
             "cwd": "${workspaceFolder}",
             "externalConsole": false,
-            "name": "Editor Run",
+            "name": "Editor: run",
             "program": "${workspaceFolder}/bin/editor.exe",
             "request": "launch",
             "setupCommands": [
@@ -59,7 +59,48 @@
             "stopAtEntry": false,
             "type": "cppdbg",
             "windows": {
-                "miDebuggerPath": "C:/raylib/w64devkit/bin/gdb.exe"
+                "miDebuggerPath": "C:/w64devkit/bin/gdb.exe"
+            }
+        },
+        {
+            "MIMode": "gdb",
+            "cwd": "${workspaceFolder}",
+            "externalConsole": true,
+            "name": "Launcher: build",
+            "preLaunchTask": "Launcher",
+            "program": "${workspaceFolder}/bin/launcher.exe",
+            "request": "launch",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "ignoreFailures": false,
+                    "text": "-enable-pretty-printing"
+                }
+            ],
+            "stopAtEntry": false,
+            "type": "cppdbg",
+            "windows": {
+                "miDebuggerPath": "C:/w64devkit/bin/gdb.exe"
+            }
+        },
+        {
+            "MIMode": "gdb",
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false,
+            "name": "Launcher: run",
+            "program": "${workspaceFolder}/bin/launcher.exe",
+            "request": "launch",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "ignoreFailures": false,
+                    "text": "-enable-pretty-printing"
+                }
+            ],
+            "stopAtEntry": false,
+            "type": "cppdbg",
+            "windows": {
+                "miDebuggerPath": "C:/w64devkit/bin/gdb.exe"
             }
         }
     ],

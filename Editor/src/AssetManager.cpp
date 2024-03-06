@@ -13,6 +13,7 @@ namespace Engine{
 	}
 	void AssetManager::loadAssetsFolder(std::filesystem::path path){
 		std::vector<std::filesystem::path> folders;
+		assetFolderPath = path;
 		folders.push_back(path);
 
 		while(folders.size() > 0){
@@ -59,6 +60,39 @@ namespace Engine{
 					if(file.path().extension() == ".png"){
 						std::string path = file.path().string();
 						if(std::filesystem::exists(path.substr(0, path.size() - 4) + ".tex")){
+							continue;
+						}
+						shdPtr<TextureAsset> asset = std::make_shared<TextureAsset>();
+						asset->create(path.substr(0, path.size() - 4) + ".tex");
+						asset->save();
+						addTex(asset, asset->getId());
+					}
+				}
+			}
+		}
+	}
+	void AssetManager::updateAssets(){
+		std::vector<std::filesystem::path> folders;
+		folders.push_back(assetFolderPath);
+
+		while(folders.size() > 0){
+			std::filesystem::path curFolder = folders[0];
+			for(int j = 1; j < folders.size(); j++){
+				folders[j - 1] = folders[j];
+			}
+			folders.resize(folders.size() - 1);
+
+			for(auto file : std::filesystem::directory_iterator(curFolder)){
+				if(file.is_directory()){
+					if(file.path().filename() == ".vscode" || file.path().filename() == ".git"){
+						continue;
+					}
+					folders.push_back(file.path());
+				}else{
+					if(file.path().extension() == ".png"){
+						std::string path = file.path().string();
+						if(std::filesystem::exists(path.substr(0, path.size() - 4) + ".tex")){
+							getTex(path.substr(0, path.size() - 4) + ".tex")->reload();
 							continue;
 						}
 						shdPtr<TextureAsset> asset = std::make_shared<TextureAsset>();

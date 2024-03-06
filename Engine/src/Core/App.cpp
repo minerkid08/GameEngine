@@ -9,7 +9,7 @@ namespace Engine{
 			Log::Error("App already exists");
 			return;
 		}
-		window = uniqPtr<Window>(Window::MakeWindow(1280,720, title));
+		window = uniqPtr<Window>(Window::MakeWindow(1280, 720, title));
 		window->setEventCallback(std::bind(App::event, this, std::placeholders::_1));
 		Renderer::init();
 		Renderer2D::init();
@@ -17,12 +17,12 @@ namespace Engine{
 		uiLayer = new ImGuiLayer();
 		pushOverlay(uiLayer);
 	}
-	App::App(int width, int height, const char* title){
+	App::App(int width, int height, const char* title, Window::WindowMode mode){
 		if(instance){
 			Log::Error("App already exists");
 			return;
 		}
-		window = uniqPtr<Window>(Window::MakeWindow(width,height, title));
+		window = std::make_unique<Window>(width, height, title, "", mode);
 		window->setEventCallback(std::bind(App::event, this, std::placeholders::_1));
 		Renderer::init();
 		Renderer2D::init();

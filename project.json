@@ -7,7 +7,8 @@
 			"type": "dll",
 			"out": "engine.dll",
 			"dll": ["glfw3", "gdi32"],
-			"sdll": ["opengl32"]
+			"sdll": ["opengl32"],
+			"configs": ["build"]
 		},
 		{
 			"name": "Editor",
@@ -16,7 +17,18 @@
 			"type": "exe",
 			"out": "editor.exe",
 			"dll": ["lua54", "engine"],
-			"sdll": []
+			"sdll": [],
+			"configs": ["build", "run"]
+		},
+		{
+			"name": "Launcher",
+			"build": [],
+			"include": ["include", "Launcher\\src"],
+			"type": "exe",
+			"out": "launcher.exe",
+			"dll": [],
+			"sdll": [],
+			"configs": ["build", "run"]
 		}
 	]
 }

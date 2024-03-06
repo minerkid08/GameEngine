@@ -53,6 +53,29 @@
                 "$gcc"
             ],
             "type": "cppbuild"
+        },
+        {
+            "args": [
+                "1",
+                "Launcher\\src",
+                "-o",
+                "${workspaceFolder}\\bin\\launcher.exe",
+                "-I${workspaceFolder}\\include",
+                "-I${workspaceFolder}\\Launcher\\src",
+                "-L${workspaceFolder}\\bin\\"
+            ],
+            "command": "d:\\cppGames\\Build.exe",
+            "group": {
+                "kind": "build"
+            },
+            "label": "Launcher",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "type": "cppbuild"
         }
     ],
     "version": "2.0.0"

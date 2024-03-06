@@ -5,7 +5,7 @@
 namespace Engine{
 	class Editor : public App {
 		public:
-		Editor() : App(1280, 720, "Sisyphus the Editor"){
+		Editor() : App(1280, 720, "Sisyphus the Editor", Window::WindowMode::FullscreenWindowed){
 			pushLayer(new EditorLayer());
 		}
 	};

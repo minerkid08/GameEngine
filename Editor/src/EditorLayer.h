@@ -10,6 +10,7 @@
 namespace Engine{
 	class EditorLayer : public Layer{
 		public:
+		static glm::vec2 viewportSize;
 		EditorLayer();
 		~EditorLayer();
 		void attach();
@@ -20,7 +21,6 @@ namespace Engine{
 		bool running = false;
 		private:
 		bool* open;
-		glm::vec2 viewportSize;
 		shdPtr<FrameBuffer> frameBuffer;
 		shdPtr<Scene> scene;
 		shdPtr<Scene> runtimeScene;
@@ -29,7 +29,7 @@ namespace Engine{
 		Serializer serializer;
 		bool mouseOnViewport = false;
 		int explorerMode = 0;
-		bool showSettings = false;
+		bool showSettings = true;
 
 		CameraController editorCamera;
 

@@ -32,6 +32,12 @@ namespace Engine{
 		path = newPath;
 	}
 
+	void TextureAsset::reload(){
+		std::filesystem::path path2 = path.string();
+		path2.replace_extension(".png");
+		tex->loadFromFile(path2.string());
+	}
+
 	void TextureAsset::save(){
 		nlohmann::json j;
 		j["id"] = (uint64_t)id;

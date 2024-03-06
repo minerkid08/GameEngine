@@ -1,6 +1,7 @@
 #include "EditorLayer.h"
-
+#include <Core/Args.h>
 namespace Engine{
+	glm::vec2 EditorLayer::viewportSize = {};
 	EditorLayer::EditorLayer() : Layer("e"), editorCamera(0.0f){}
 	void EditorLayer::attach(){
 		assetManager = std::make_shared<AssetManager>();
@@ -9,8 +10,13 @@ namespace Engine{
 			Console::add(str, c);
 		};
 		scene = std::make_shared<Scene>();
-		contentBrowser.setMainPath("Assets");
-		explorer.setMainPath("Assets");
+		if(Args::argc > 1){
+			contentBrowser.setMainPath(Args::argv[1]);
+			explorer.setMainPath(Args::argv[1]);
+		}else{
+			contentBrowser.setMainPath("Assets");
+			explorer.setMainPath("Assets");
+		}
 
 		serializer.setEnt(scene);
 
@@ -22,8 +28,13 @@ namespace Engine{
 		spec.height = 720;
 		frameBuffer = std::make_shared<FrameBuffer>(spec);
 
-		assetManager->loadAssetsFolder("Assets");
-		assetManager->load("Assets");
+		if(Args::argc > 1){
+			assetManager->loadAssetsFolder(Args::argv[1]);
+			assetManager->load(Args::argv[1]);
+		}else{
+			assetManager->loadAssetsFolder("Assets");
+			assetManager->load("Assets");
+		}
 
 		Console::add("inited", 1);
 	}
@@ -100,6 +111,7 @@ namespace Engine{
 	        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 	        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 	    }
+
 	    if (ImGui::BeginMenuBar()){
 	        if (ImGui::BeginMenu("File")){
 				if(ImGui::MenuItem("New")){
@@ -117,12 +129,6 @@ namespace Engine{
 					if(explorerMode == 0){
 						explorerMode = 2;
 						explorer.reset(FileExplorerFlags_None);
-					}
-				}
-				if(ImGui::MenuItem("Set Project Dir")){
-					if(explorerMode == 0){
-						explorerMode = 3;
-						explorer.reset(FileExplorerFlags_DontShowFiles | FileExplorerFlags_AlwaysShowBack);
 					}
 				}
 				if(ImGui::MenuItem("Settings")){
@@ -158,13 +164,32 @@ namespace Engine{
 				};
 	            ImGui::EndMenu();
 	        }
+			ImGui::SetCursorPosX(ImGui::GetContentRegionMax().x - 50);
+			if(ImGui::Button("X")){
+				App::getInstance().close();
+			}
 	        ImGui::EndMenuBar();
-			
 	    }
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0,0});
+		
 		ImGui::Begin("Viewport");
+
 		mouseOnViewport = (ImGui::IsWindowFocused() && ImGui::IsWindowHovered());
 		App::getInstance().getUiLayer()->setBlockEvents(!mouseOnViewport);
+		
+		if(!running){
+			if(ImGui::Button("|>")){
+				startRun();
+			}
+		}else{
+			if(ImGui::Button("||")){
+				stopRun();
+			}
+		}
+		ImGui::SameLine();
+		ImGui::Text(("aspect: " + std::to_string((int)viewportSize.x) + " / " + std::to_string((int)viewportSize.y)).c_str());
+
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		glm::vec2 glmSize = {viewportPanelSize.x, viewportPanelSize.y};
 		if(viewportSize != glmSize){
@@ -189,30 +214,15 @@ namespace Engine{
 			}
 		}
 		ImGui::End();
+		ImGui::End();
 		ImGui::PopStyleVar();
 		sceneHierarchy.uiRender();
 		contentBrowser.render(assetManager);
 		console.draw();
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 1.5 * SettingsPanel::scaleAllSizes));
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
-		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
-		if(!running){
-			if(ImGui::Button("|>")){
-				startRun();
-			}
-		}else{
-			if(ImGui::Button("||")){
-				stopRun();
-			}
-		}
-		ImGui::SameLine();
-		ImGui::MenuItem(("aspect: " + std::to_string((int)viewportSize.x) + " / " + std::to_string((int)viewportSize.y)).c_str());
-		ImGui::End();
-		ImGui::PopStyleVar(2);
+		
 		if(showSettings){
 			settings.draw();
 		}
-	    ImGui::End();
 
 		switch(explorerMode){
 			case 0:
