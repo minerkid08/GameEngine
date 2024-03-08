@@ -3,6 +3,7 @@
 #include "renderer/Renderer.h"
 #include "renderer/2D/2DRenderer.h"
 namespace Engine{
+	bool App::running = true;
 	App* App::instance = nullptr;
 	App::App(const char* title){
 		if(instance){

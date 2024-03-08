@@ -1,6 +1,7 @@
 #include "AssetManager.h"
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 namespace Engine{
 	AssetManager* AssetManager::instance = nullptr;
@@ -9,7 +10,9 @@ namespace Engine{
 		instance = this;
 	}
 	AssetManager::~AssetManager(){
-
+		for(auto& [id, tex] : textures){
+			textures[id] = nullptr;
+		}
 	}
 	void AssetManager::loadAssetsFolder(std::filesystem::path path){
 		std::vector<std::filesystem::path> folders;

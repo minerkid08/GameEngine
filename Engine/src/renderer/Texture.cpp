@@ -3,6 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stbImage.h>
 #include <glad/glad.h>
+#include "Core/App.h"
 namespace Engine{
 	Texture2D::Texture2D(const std::string& filename){
 		path = filename;
@@ -38,7 +39,9 @@ namespace Engine{
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	}
 	Texture2D::~Texture2D(){
-		glDeleteTextures(1, &id);
+		if(App::running){
+			glDeleteTextures(1, &id);
+		}
 	}
 	void Texture2D::loadFromFile(const std::string& path){
 		int channels;

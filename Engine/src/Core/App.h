@@ -14,6 +14,7 @@
 namespace Engine{
 	class API App{
 		public:
+		static bool running;
 		App(const char* title);
 		App(int width, int height, const char* title, Window::WindowMode mode);
 		~App();
@@ -32,7 +33,6 @@ namespace Engine{
 		bool windowResize(WindowResizeEvent* e);
 		uniqPtr<Window> window;
 		ImGuiLayer* uiLayer;
-		bool running = true;
 		LayerStack layerStack;
 
 		float lastDeltaTime = 0.0f;
